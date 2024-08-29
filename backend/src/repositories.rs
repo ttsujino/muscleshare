@@ -24,9 +24,9 @@ pub struct UpdatePost {
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
     async fn create(&self, user_id: i32, payload: CreatePost) -> anyhow::Result<Post>;
-    // async fn get(&self, id: i32) -> anyhow::Result<Post>;
-    // async fn update(&self, id: i32, payload: UpdatePost) -> Result<Post, sqlx::Error>;
-    // async fn delete(&self, id: i32) -> Result<Post, sqlx::Error>;
+    async fn get_post(&self, id: i32) -> anyhow::Result<Post>;
+    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
+    async fn delete(&self, id: i32) -> anyhow::Result<Post>;
     async fn get_all(&self) -> anyhow::Result<Vec<Post>>;
 }
 
@@ -70,5 +70,50 @@ impl PostRepository for PostRepositoryForDb {
         .await?;
 
         Ok(posts)
+    }
+
+    async fn get_post(&self, id: i32) -> anyhow::Result<Post> {
+        let post = sqlx::query_as::<_, Post>(
+            r#"
+            SELECT id, user_id, content
+            FROM posts
+            WHERE id = $1
+            "#,
+        )
+        .bind(id)
+        .fetch_one(&self.pool)
+        .await?;
+
+        Ok(post)
+    }
+
+    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>> {
+        let posts = sqlx::query_as::<_, Post>(
+            r#"
+            SELECT id, user_id, content
+            FROM posts
+            WHERE user_id = $1
+            "#,
+        )
+        .bind(user_id)
+        .fetch_all(&self.pool)
+        .await?;
+
+        Ok(posts)
+    }
+
+    async fn delete(&self, id: i32) -> anyhow::Result<Post> {
+        let post = sqlx::query_as::<_, Post>(
+            r#"
+            DELETE FROM posts
+            WHERE id = $1
+            RETURNING id, user_id, content
+            "#,
+        )
+        .bind(id)
+        .fetch_one(&self.pool)
+        .await?;
+
+        Ok(post)
     }
 }

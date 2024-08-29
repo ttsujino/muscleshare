@@ -3,7 +3,7 @@ mod handlers;
 
 use axum::{
     extract::Extension,
-    routing::{get, post},
+    routing::{get, post, delete},
     Router,
 };
 use repositories::{PostRepository, PostRepositoryForDb};
@@ -12,7 +12,7 @@ use std::{env, sync::Arc};
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
 
-use handlers::{create_post, get_all_posts};
+use handlers::{create_post, get_all_posts, get_target_user_posts, get_post, delete_post};
 
 #[tokio::main]
 async fn main() {
@@ -43,7 +43,10 @@ async fn main() {
 fn create_app<T: PostRepository>(repository: T) -> Router {
     Router::new()
         .route("/", get(|| async { "Hello, World!" }))
-        .route("/:user_id/post", post(create_post::<T>))
-        .route("/all_posts", get(get_all_posts::<T>))
+        .route("/posts", get(get_all_posts::<T>))
+        .route("/posts/:user_id", get(get_target_user_posts::<T>))
+        .route("/post/new/:user_id", post(create_post::<T>))
+        .route("/post/:uuid", get(get_post::<T>))
+        .route("/post/:uuid/delete", delete(delete_post::<T>))
         .layer(Extension(Arc::new(repository)))
 }
