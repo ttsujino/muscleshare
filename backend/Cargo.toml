@@ -1,6 +1,16 @@
 [package]
-name = "muscleshare"
+name = "ms-backend"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+tracing = "0.1"
+tracing-subscriber = "0.3"
+dotenv = "0.15"
+axum = { version = "0.7.5", features = ["macros"] }
+tokio = { version = "1.39.3", features = ["full"] }
+tower = "0.5"
+sqlx = { version = "0.7", features = [ "runtime-tokio", "tls-rustls", "postgres" ] }
+serde = "1.0"
+uuid = { version = "1.1", features = ["v4"] }
+anyhow = "1.0"

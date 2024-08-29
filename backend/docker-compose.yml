@@ -1,0 +1,19 @@
+version: "3.8"
+services:
+  database:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: 'database'
+    ports:
+      - "4321:5432"
+    volumes:
+      - ms_db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: admin
+      POSTGRES_USER: admin
+      POSTGRES_DB: ms_db
+      TZ: Asia/Tokyo
+    restart: always
+volumes:
+  ms_db_data:
