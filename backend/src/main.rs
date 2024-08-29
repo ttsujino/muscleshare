@@ -23,9 +23,6 @@ async fn main() {
 
     let database_url = &env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     tracing::info!(database_url, "Start connect database...");
-    // let pool = PgPool::connect(database_url)
-    //     .await
-    //     .expect("Failed to connect to Database");
 
     let pool = PgPoolOptions::new()
         .connect(database_url)
