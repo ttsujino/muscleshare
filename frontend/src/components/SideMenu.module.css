@@ -1,0 +1,44 @@
+/* components/SideMenu.module.css */
+
+.hamburgerIcon {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 1000;
+}
+
+.sideMenu {
+  position: fixed;
+  top: 0;
+  left: -250px; /* 初期位置（画面外） */
+  width: 250px;
+  height: 100%;
+  background-color: #fff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.3);
+  transition: left 0.3s ease;
+  overflow-y: auto;
+  z-index: 999;
+}
+
+.sideMenu.open {
+  left: 0; /* メニューが開いたときの位置 */
+}
+
+.menuItems {
+  display: flex;
+  flex-direction: column;
+  padding-top: 50px;
+}
+
+.menuItem {
+  padding: 15px 20px;
+  font-size: 18px;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+}
+
+.menuItem:hover {
+  background-color: #f0f0f0;
+}
