@@ -10,19 +10,24 @@ const posts = [
     id: 1,
     title: 'Post 1',
     image: 'https://via.placeholder.com/300',
-    content: 'This is the content of the first post.'
+    content: 'This is the content of the first post.',
+    user_name: 'user1'
   },
   {
     id: 2,
     title: 'Post 2',
     image: 'https://via.placeholder.com/300',
-    content: 'This is the content of the second post.'
+    content: 'This is the content of the second post.',
+    user_name: 'user2'
   },
   // 他の投稿データ
 ];
 
-const Post = ({ title, image, content }) => (
+const Post = ({ title, image, content, user_name }) => (
   <Paper elevation={3} style={{ padding: 16 }}>
+    <Typography variant="h7" gutterBottom>
+      {user_name}
+    </Typography>
     <img src={image} alt={title} style={{ width: '100%', borderRadius: 8 }} />
     <Typography variant="h6" gutterBottom>
       {title}
@@ -35,7 +40,7 @@ const Post = ({ title, image, content }) => (
 
 const PostSpace = () => (
   <Container>
-    <Grid container spacing={2}>
+    <Grid container spacing={2} justifyContent="center">
       {posts.map((post) => (
         <Grid item xs={12} sm={6} md={8} key={post.id}>
           <Post {...post} />

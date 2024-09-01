@@ -6,7 +6,7 @@
 
 .leftSide {
   flex: 1.5; /* 左側のコンテンツが画面の半分を占める */
-  background-color: lightgray;
+  background-color: white;
   padding: 0px;
 }
 
