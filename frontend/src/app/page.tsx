@@ -1,5 +1,6 @@
 import Image from "next/image";
 import styles from "./page.module.css";
+import PostSpace from "../components/Post";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
         <div className={styles.leftSide}>
           <h1>左側のコンテンツ</h1>
           <p>ここに左側の内容を追加します。</p>
+          <PostSpace />
         </div>
         <div className={styles.rightSide}>
           <h1>右側のコンテンツ</h1>
