@@ -44,6 +44,6 @@ fn create_app<T: PostRepository>(repository: T) -> Router {
         .route("/posts/:user_id", get(get_target_user_posts::<T>))
         .route("/post/new/:user_id", post(create_post::<T>))
         .route("/post/:uuid", get(get_post::<T>))
-        .route("/post/:uuid/delete", delete(delete_post::<T>))
+        .route("/post/:uuid", delete(delete_post::<T>))
         .layer(Extension(Arc::new(repository)))
 }
