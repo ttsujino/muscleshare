@@ -1,12 +1,10 @@
 "use client";
-import Image from "next/image";
 import styles from "./page.module.css";
 import PostSpace from "../components/Post";
-import { auth, provider } from "../components/firebase";
-import { signInWithPopup, User, onAuthStateChanged } from "firebase/auth";
-import { useState } from "react";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function Home() {
+  
   return (
     <main>
       <div className={styles.container}>
@@ -19,10 +17,7 @@ export default function Home() {
           <h1>右側のコンテンツ</h1>
           <p>ここに右側の内容を追加します。</p>
           <div>
-            <SignInButton />
-          </div>
-          <div>
-            <DisplayUserInfo />
+            <SignInComponent />
           </div>
         </div>
       </div>
@@ -30,32 +25,19 @@ export default function Home() {
   );
 }
 
-function SignInButton() {
-  const signInWithGoogle = () => {
-    // filebaseを使ってグーグル認証を行う
-    signInWithPopup(auth, provider);
-  };
-  return (
-    <button onClick={signInWithGoogle}>
-      <p>Googleでサインイン</p>
-    </button>
-  )
-}
+function SignInComponent() {
+  const { user, error, isLoading } = useUser();
 
-function DisplayUserInfo() {
-  const [user, setUser] = useState<null | User>(null);
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>{error.message}</div>;
 
-  onAuthStateChanged(auth, (user) => {
-    setUser(user);
-  });
-  return (
-    <div>
-      {user && (
-        <div>
-          <p>{user.displayName}</p>
-          
-        </div>
-      )}
-    </div>
-  );
+  if (user) {
+    return (
+      <div>
+        Welcome {user.name}! <a href="/api/auth/logout">Logout</a>
+      </div>
+    );
+  }
+
+  return <a href="/api/auth/login">Login</a>;
 }
