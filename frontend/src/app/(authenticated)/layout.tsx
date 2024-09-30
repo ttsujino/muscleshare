@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import SideMenu from "../../components/SideMenu";
+import Footer from "../../components/Footer";
 import { UserProvider } from '@auth0/nextjs-auth0/client';
 
 const inter = Inter({ subsets: ["latin"] });
@@ -22,6 +23,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <SideMenu />
           {children}
+          <Footer />
         </body>
       </html>
     </UserProvider>
