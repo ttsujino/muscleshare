@@ -19,9 +19,9 @@ const posts = [
   // 他の投稿データ
 ];
 
-const Post = ({ title, image, content, user_name }) => (
+const Post: React.FC<{ title: string; image: string; content: string; user_name: string }> = ({ title, image, content, user_name }) => (
   <Paper elevation={3} style={{ padding: 16 }}>
-    <Typography variant="h7" gutterBottom>
+    <Typography variant="h6" gutterBottom>
       {user_name}
     </Typography>
     <img src={image} alt={title} style={{ width: '100%', borderRadius: 8 }} />
