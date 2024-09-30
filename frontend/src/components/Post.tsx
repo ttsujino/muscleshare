@@ -1,5 +1,6 @@
 import React from 'react';
-import { Container, Grid, Paper, Typography, Box } from '@mui/material';
+import { Container, Paper, Typography } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 
 const posts = [
   {
@@ -38,7 +39,7 @@ const PostSpace = () => (
   <Container>
     <Grid container spacing={2} justifyContent="center">
       {posts.map((post) => (
-        <Grid item xs={12} sm={6} md={8} key={post.id}>
+        <Grid size={4} key={post.id}>
           <Post {...post} />
         </Grid>
       ))}
@@ -47,3 +48,4 @@ const PostSpace = () => (
 );
 
 export default PostSpace;
+
