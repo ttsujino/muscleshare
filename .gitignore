@@ -23,4 +23,3 @@ backend/.env
 
 frontend/node_modules/*
 node_modules/*
-asset/*

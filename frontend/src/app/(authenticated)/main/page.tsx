@@ -1,8 +1,8 @@
 "use client";
 import styles from "./page.module.css";
-import PostSpace from "../../../components/Post";
+import PostSpace from "./components/Post";
 import { useUser } from "@auth0/nextjs-auth0/client";
-import MainHead from "../../../components/MainHead";
+import MainTop from "./components/MainTop";
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
@@ -19,7 +19,7 @@ export default function Home() {
     <main>
       <div className={`${styles.container}`}>
         <div>
-          <MainHead user_name={user?.name || undefined} />
+          <MainTop user_name={user?.name || undefined} />
           <PostSpace />
         </div>
       </div>
