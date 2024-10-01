@@ -1,4 +1,4 @@
-name: Deploy Next.js site to Pages
+name: Build Next.js App
 
 on:
   # Runs on pushes targeting the default branch
@@ -37,4 +37,4 @@ jobs:
       - name: Install dependencies
         run: yarn install
       - name: Build App
-        run: yarn build
+        run: next build
