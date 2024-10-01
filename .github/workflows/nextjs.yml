@@ -31,11 +31,13 @@ jobs:
           fi
       - name: Setup Node
         uses: actions/setup-node@v4
+        working-directory: frontend
         with:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
       - name: Restore cache
         uses: actions/cache@v4
+        working-directory: frontend
         with:
           path: |
             .next/cache
@@ -45,10 +47,8 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
-        run: |
-          cd frontend
-          ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
+        working-directory: frontend
+        run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
-        run: |
-          cd frontend
-          ${{ steps.detect-package-manager.outputs.runner }} build
+        working-directory: frontend
+        run: ${{ steps.detect-package-manager.outputs.runner }} build
