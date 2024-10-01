@@ -1,17 +1,15 @@
 
 .container {
   display: flex;
+  justify-content: center; /* 水平方向に中央寄せ */
   height: 100vh; /* ビューポートの高さ全体を使う */
-}
-
-.leftSide {
-  flex: 1.5; /* 左側のコンテンツが画面の半分を占める */
   background-color: white;
-  padding: 0px;
 }
 
-.rightSide {
-  flex: 1; /* 右側のコンテンツが画面の半分を占める */
-  background-color: lightblue;
-  padding: 0px;
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: white;
 }

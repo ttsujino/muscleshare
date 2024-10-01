@@ -1,6 +1,5 @@
 import React from 'react';
-import { Container, Paper, Typography } from '@mui/material';
-import Grid from '@mui/material/Grid2';
+import { Container, Paper, Typography } from '@mui/material'; import Grid from '@mui/material/Grid2';
 
 const posts = [
   {
@@ -17,7 +16,34 @@ const posts = [
     content: 'This is the content of the second post.',
     user_name: 'user2'
   },
-  // 他の投稿データ
+  {
+    id: 3,
+    title: 'Post 3',
+    image: 'https://via.placeholder.com/300',
+    content: 'This is the content of the third post.',
+    user_name: 'user3'
+  },
+  {
+    id: 4,
+    title: 'Post 4',
+    image: 'https://via.placeholder.com/300',
+    content: 'This is the content of the fourth post.',
+    user_name: 'user4'
+  },
+  {
+    id: 5,
+    title: 'Post 5',
+    image: 'https://via.placeholder.com/300',
+    content: 'This is the content of the fifth post.',
+    user_name: 'user5'
+  },
+  {
+    id: 6,
+    title: 'Post 6',
+    image: 'https://via.placeholder.com/300',
+    content: 'This is the content of the sixth post.',
+    user_name: 'user6'
+  }
 ];
 
 const Post: React.FC<{ title: string; image: string; content: string; user_name: string }> = ({ title, image, content, user_name }) => (
@@ -36,15 +62,17 @@ const Post: React.FC<{ title: string; image: string; content: string; user_name:
 );
 
 const PostSpace = () => (
-  <Container>
-    <Grid container spacing={2} justifyContent="center">
-      {posts.map((post) => (
-        <Grid size={4} key={post.id}>
-          <Post {...post} />
-        </Grid>
-      ))}
-    </Grid>
-  </Container>
+  <div>
+    <Container>
+      <Grid container spacing={2} justifyContent="center">
+        {posts.map((post) => (
+          <Grid size={4} key={post.id}>
+            <Post {...post} />
+          </Grid>
+        ))}
+      </Grid>
+    </Container>
+  </div>
 );
 
 export default PostSpace;
