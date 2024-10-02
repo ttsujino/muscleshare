@@ -23,7 +23,7 @@ export default function RootLayout({
         <body className={inter.className}>
           <SideMenu />
           {children}
-          <Footer />
+          {/* <Footer /> */}
         </body>
       </html>
     </UserProvider>
