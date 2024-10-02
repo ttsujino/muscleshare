@@ -42,3 +42,18 @@
 .menuItem:hover {
   background-color: #f0f0f0;
 }
+
+.ButtomItem {
+  padding: 30px 20px;
+  font-size: 18px;
+  cursor: pointer;
+  display: flex; /* フレックスボックスを使用 */
+  justify-content: center; /* 水平方向のセンターに配置 */
+  position: absolute;
+  bottom: 0px;
+  width: 100%; /* 幅を100%に設定 */
+}
+
+.ButtomItem:hover {
+  background-color: #f0f0f0;
+}

@@ -10,7 +10,7 @@
   font-size: 25px;
   margin: 0; /* マージンをリセット */
   position: absolute; /* 絶対位置に変更 */
-  top: 15%; /* top_containerからの相対位置 */
+  top: 5%; /* top_containerからの相対位置 */
   left: 13%; /* top_containerからの相対位置 */
 }
 
@@ -20,7 +20,7 @@
   width: 150px;
   height: 150px;
   position: absolute; /* 絶対位置に変更 */
-  top: 35%; /* top_containerからの相対位置 */
+  top: 25%; /* top_containerからの相対位置 */
   left: 15%; /* top_containerからの相対位置 */
 }
 
@@ -28,6 +28,6 @@
   font-size: 20px;
   margin: 0; /* マージンをリセット */
   position: absolute; /* 絶対位置に変更 */
-  top: 40%; /* top_containerからの相対位置 */
+  top: 30%; /* top_containerからの相対位置 */
   left: 40%; /* top_containerからの相対位置 */
 }

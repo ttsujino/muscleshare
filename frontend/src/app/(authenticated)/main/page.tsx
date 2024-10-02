@@ -3,7 +3,7 @@ import styles from "./page.module.css";
 import PostSpace from "./components/Post";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import MainTop from "./components/MainTop";
-import CircularIndeterminate from "./components/Loading";
+import Loading from "./components/Loading";
 
 export default function Home() {
   const { user, error, isLoading } = useUser();
@@ -11,8 +11,8 @@ export default function Home() {
   if (isLoading) {
     return (
       <div className={`${styles.loading}`}>
-        <CircularIndeterminate />  
-      </div> // ローディング中の表示
+        <Loading />
+      </div>
     )
   }
 
@@ -22,8 +22,8 @@ export default function Home() {
 
   return (
     <main>
-      <div className={`${styles.container}`}>
-        <div>
+      <div className={`${styles.container} ${styles.container}`}>
+        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <MainTop user_name={user?.name || undefined} />
           <PostSpace />
         </div>
