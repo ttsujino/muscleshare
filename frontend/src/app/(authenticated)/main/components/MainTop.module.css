@@ -1,18 +1,33 @@
-.top {
+.top_container {
+  position: relative;
   background-color: white;
   height: 40%;
+  display: flex;
+  align-items: center; /* 縦方向の中央揃え */
 }
 
 .user_name {
   font-size: 25px;
-  margin-top: 50px;
-  margin-left: 130px;
+  margin: 0; /* マージンをリセット */
+  position: absolute; /* 絶対位置に変更 */
+  top: 15%; /* top_containerからの相対位置 */
+  left: 13%; /* top_containerからの相対位置 */
 }
+
 .icon {
   object-fit: cover;
   border-radius: 50%;
   width: 150px;
   height: 150px;
-  margin-top: 30px;
-  margin-left: 150px;
+  position: absolute; /* 絶対位置に変更 */
+  top: 35%; /* top_containerからの相対位置 */
+  left: 15%; /* top_containerからの相対位置 */
+}
+
+.introduction {
+  font-size: 20px;
+  margin: 0; /* マージンをリセット */
+  position: absolute; /* 絶対位置に変更 */
+  top: 40%; /* top_containerからの相対位置 */
+  left: 40%; /* top_containerからの相対位置 */
 }
