@@ -23,7 +23,7 @@ export default function Home() {
   return (
     <main>
       <div className={`${styles.container} ${styles.container}`}>
-        <div style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div style={{ minWidth: '1000px', margin: '0 auto' }}>
           <MainTop user_name={user?.name || undefined} />
           <PostSpace />
         </div>
