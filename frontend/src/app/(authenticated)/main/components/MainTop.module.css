@@ -3,7 +3,7 @@
   background-color: white;
   height: 40%;
   display: flex;
-  align-items: center; /* 縦方向の中央揃え */
+  flex-direction: column;
 }
 
 .user_name {
