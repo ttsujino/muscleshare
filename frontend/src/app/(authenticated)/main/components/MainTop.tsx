@@ -4,8 +4,12 @@ import Image from 'next/image';
 const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
     return (
         <div className={styles.top}>
-            <h1>Hello {user_name}</h1>
-            <Image src="/sample/black.png" alt="main" width={150} height={150} style={{ objectFit: 'cover', borderRadius: '50%', width: '200px', height: '200px' }} />
+            <div className={styles.user_name}>
+                <p>{user_name}</p>
+            </div>
+            <div>
+                <Image src="/sample/black.png" alt="main" width={150} height={150} className={styles.icon} />
+            </div>
         </div>
     );
 };

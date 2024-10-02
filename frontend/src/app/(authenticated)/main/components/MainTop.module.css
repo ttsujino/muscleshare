@@ -1,4 +1,18 @@
 .top {
   background-color: white;
-  height: 30%;
+  height: 40%;
+}
+
+.user_name {
+  font-size: 25px;
+  margin-top: 50px;
+  margin-left: 130px;
+}
+.icon {
+  object-fit: cover;
+  border-radius: 50%;
+  width: 150px;
+  height: 150px;
+  margin-top: 30px;
+  margin-left: 150px;
 }
