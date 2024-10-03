@@ -8,11 +8,12 @@ pub struct Post {
     id: i32,
     user_id: i32,
     content: String,
+    image_id: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct CreatePost {
-    content: String,
+    // content: String,
 }
 
 #[derive(Debug, Deserialize)]
@@ -22,7 +23,7 @@ pub struct UpdatePost {
 
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
-    async fn create(&self, user_id: i32, payload: CreatePost) -> anyhow::Result<Post>;
+    async fn create(&self, user_id: i32, content: String, image_id: String) -> anyhow::Result<Post>;
     async fn get_post(&self, id: i32) -> anyhow::Result<Post>;
     async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
     async fn delete(&self, id: i32) -> anyhow::Result<Post>;
@@ -42,16 +43,17 @@ impl PostRepositoryForDb {
 
 #[async_trait]
 impl PostRepository for PostRepositoryForDb {
-    async fn create(&self, user_id: i32, payload: CreatePost) -> anyhow::Result<Post> {
+    async fn create(&self, user_id: i32, content: String, image_id: String) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
-            INSERT INTO posts (user_id, content)
-            VALUES ($1, $2)
-            RETURNING id, user_id, content
+            INSERT INTO posts (user_id, content, image_id)
+            VALUES ($1, $2, $3)
+            RETURNING id, user_id, content, image_id
             "#,
         )
         .bind(user_id)
-        .bind(payload.content)
+        .bind(content)
+        .bind(image_id)
         .fetch_one(&self.pool)
         .await?;
 

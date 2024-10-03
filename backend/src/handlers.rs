@@ -1,19 +1,42 @@
 use axum::{
-    extract::{Json, Extension, Path},
+    extract::{Json, Extension, Path, Multipart},
     http::StatusCode,
     response::IntoResponse,
 };
-use crate::repositories::{CreatePost, PostRepository};
+use crate::repositories::PostRepository;
 use std::sync::Arc;
+use uuid::Uuid;
+use tokio::io::AsyncWriteExt;
 
 pub async fn create_post<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
     Path(user_id): Path<i32>,
-    Json(payload): Json<CreatePost>,
+    mut multipart: Multipart,
 ) -> Result<impl IntoResponse, StatusCode> {
-    // TODO: ユーザーはパスからではなく, JWTトークンから取得する
+
+    let mut content = String::new();
+    let mut image_id = String::new();
+
+    while let Some(field) = multipart.next_field().await.unwrap() {
+        let field_name = field.name().unwrap().to_string();
+        match field_name.as_str() {
+            "content" => {
+                content = field.text().await.unwrap();
+            }
+            "image" => {
+                let image = field.bytes().await.unwrap();
+                image_id = format!("{}.jpg", Uuid::new_v4());
+                let mut file = tokio::fs::File::create(format!("./imgs/{}", image_id)).await.unwrap();
+                file.write_all(&image).await.unwrap();
+            }
+            _ => {
+                tracing::warn!("Unexpected field: {}", field_name);
+            }
+        }   
+    }
+
     let post = repository
-        .create(user_id, payload)
+        .create(user_id, content, image_id)
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
