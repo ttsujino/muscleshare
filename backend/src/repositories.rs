@@ -2,7 +2,6 @@ use axum::async_trait;
 use serde::{Deserialize, Serialize};
 
 use sqlx::{PgPool, FromRow};
-use anyhow;
 
 #[derive(Debug, Serialize, FromRow)]
 pub struct Post {
@@ -18,7 +17,7 @@ pub struct CreatePost {
 
 #[derive(Debug, Deserialize)]
 pub struct UpdatePost {
-    content: String,
+    // content: String,
 }
 
 #[async_trait]
