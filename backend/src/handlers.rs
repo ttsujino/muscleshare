@@ -36,7 +36,7 @@ pub async fn create_post<T: PostRepository>(
     }
 
     let post = repository
-        .create(user_id, content, image_id)
+        .create(user_id, content, Uuid::parse_str(&image_id).unwrap())
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
@@ -46,6 +46,7 @@ pub async fn create_post<T: PostRepository>(
 pub async fn get_all_posts<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
 ) -> Result<impl IntoResponse, StatusCode> {
+
     let posts = repository
         .get_all()
         .await

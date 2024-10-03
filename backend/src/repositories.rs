@@ -2,13 +2,15 @@ use axum::async_trait;
 use serde::{Deserialize, Serialize};
 
 use sqlx::{PgPool, FromRow};
+use uuid::Uuid;
+use tracing::error;
 
 #[derive(Debug, Serialize, FromRow)]
 pub struct Post {
     id: i32,
     user_id: i32,
     content: String,
-    image_id: String,
+    image_id: Uuid,
 }
 
 #[derive(Debug, Deserialize)]
@@ -23,7 +25,7 @@ pub struct UpdatePost {
 
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
-    async fn create(&self, user_id: i32, content: String, image_id: String) -> anyhow::Result<Post>;
+    async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post>;
     async fn get_post(&self, id: i32) -> anyhow::Result<Post>;
     async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
     async fn delete(&self, id: i32) -> anyhow::Result<Post>;
@@ -43,7 +45,7 @@ impl PostRepositoryForDb {
 
 #[async_trait]
 impl PostRepository for PostRepositoryForDb {
-    async fn create(&self, user_id: i32, content: String, image_id: String) -> anyhow::Result<Post> {
+    async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
             INSERT INTO posts (user_id, content, image_id)
@@ -55,7 +57,11 @@ impl PostRepository for PostRepositoryForDb {
         .bind(content)
         .bind(image_id)
         .fetch_one(&self.pool)
-        .await?;
+        .await
+        .map_err(|e| {
+            error!("Failed to create post: {:?}", e);
+            e
+        })?;
 
         Ok(post)
     }
@@ -68,7 +74,11 @@ impl PostRepository for PostRepositoryForDb {
             "#,
         )
         .fetch_all(&self.pool)
-        .await?;
+        .await
+        .map_err(|e| {
+            error!("Failed to get posts: {:?}", e);
+            e
+        })?;
 
         Ok(posts)
     }
@@ -83,7 +93,11 @@ impl PostRepository for PostRepositoryForDb {
         )
         .bind(id)
         .fetch_one(&self.pool)
-        .await?;
+        .await
+        .map_err(|e| {
+            error!("Failed to get post: {:?}", e);
+            e
+        })?;
 
         Ok(post)
     }
@@ -98,7 +112,11 @@ impl PostRepository for PostRepositoryForDb {
         )
         .bind(user_id)
         .fetch_all(&self.pool)
-        .await?;
+        .await
+        .map_err(|e| {
+            error!("Failed to get posts: {:?}", e);
+            e
+        })?;
 
         Ok(posts)
     }
@@ -113,7 +131,11 @@ impl PostRepository for PostRepositoryForDb {
         )
         .bind(id)
         .fetch_one(&self.pool)
-        .await?;
+        .await
+        .map_err(|e| {
+            error!("Failed to delete post: {:?}", e);
+            e
+        })?;
 
         Ok(post)
     }
