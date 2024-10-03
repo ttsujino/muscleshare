@@ -63,7 +63,7 @@ impl PostRepository for PostRepositoryForDb {
     async fn get_all(&self) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
-            SELECT id, user_id, content
+            SELECT id, user_id, content, image_id
             FROM posts
             "#,
         )
@@ -76,7 +76,7 @@ impl PostRepository for PostRepositoryForDb {
     async fn get_post(&self, id: i32) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
-            SELECT id, user_id, content
+            SELECT id, user_id, content, image_id
             FROM posts
             WHERE id = $1
             "#,
@@ -91,7 +91,7 @@ impl PostRepository for PostRepositoryForDb {
     async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
-            SELECT id, user_id, content
+            SELECT id, user_id, content, image_id
             FROM posts
             WHERE user_id = $1
             "#,
