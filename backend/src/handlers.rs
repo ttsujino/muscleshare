@@ -15,7 +15,7 @@ pub async fn create_post<T: PostRepository>(
 ) -> Result<impl IntoResponse, StatusCode> {
 
     let mut content = String::new();
-    let mut image_id = String::new();
+    let image_id = Uuid::new_v4().to_string();
 
     while let Some(field) = multipart.next_field().await.unwrap() {
         let field_name = field.name().unwrap().to_string();
@@ -25,8 +25,8 @@ pub async fn create_post<T: PostRepository>(
             }
             "image" => {
                 let image = field.bytes().await.unwrap();
-                image_id = format!("{}.jpg", Uuid::new_v4());
-                let mut file = tokio::fs::File::create(format!("./imgs/{}", image_id)).await.unwrap();
+                let image_fname = format!("{}.jpg", Uuid::new_v4());
+                let mut file = tokio::fs::File::create(format!("./imgs/{}", image_fname)).await.unwrap();
                 file.write_all(&image).await.unwrap();
             }
             _ => {

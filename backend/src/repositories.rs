@@ -49,7 +49,7 @@ impl PostRepository for PostRepositoryForDb {
         let post = sqlx::query_as::<_, Post>(
             r#"
             INSERT INTO posts (user_id, content, image_id)
-            VALUES ($1, $2, $3)
+            VALUES ($1, $2, $3::UUID)
             RETURNING id, user_id, content, image_id
             "#,
         )
