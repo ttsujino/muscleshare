@@ -7,6 +7,7 @@ use crate::repositories::PostRepository;
 use std::sync::Arc;
 use uuid::Uuid;
 use tokio::io::AsyncWriteExt;
+use tokio::fs::File;
 
 pub async fn create_post<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
@@ -26,7 +27,7 @@ pub async fn create_post<T: PostRepository>(
             "image" => {
                 let image = field.bytes().await.unwrap();
                 let image_fname = format!("{}.jpg", Uuid::new_v4());
-                let mut file = tokio::fs::File::create(format!("./imgs/{}", image_fname)).await.unwrap();
+                let mut file = File::create(format!("./imgs/{}", image_fname)).await.unwrap();
                 file.write_all(&image).await.unwrap();
             }
             _ => {
