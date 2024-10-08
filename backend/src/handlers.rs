@@ -101,16 +101,17 @@ mod tests {
     use sqlx::PgPool;
     use axum::{
         Router,
-        routing::get,
+        routing::{post, get},
         extract::Extension,
     };
     use crate::repositories::PostRepositoryForDb;
     use axum_test::TestServer;
+    // use serde_json::json;
 
     fn create_app<T: PostRepository>(repository: T) -> Router {
         Router::new()
-        .route("/ping", get(|| async { "pong!" }))
-        .route("/posts/:user_id", get(get_target_user_posts::<T>))
+        .route("/posts", get(get_all_posts::<T>))
+        .route("/post/new/:user_id", post(create_post::<T>))
         .layer(Extension(Arc::new(repository)))
     }
 
@@ -122,10 +123,15 @@ mod tests {
 
         let server = TestServer::new(app).unwrap();
 
-        let response = server.post("/ping")
-            .await;
-        
+        let response = server.get("/posts").await;
         response.assert_status_ok();
-        response.assert_text("pong!");
+
+        // let response = server.post("/post/new/1")
+        //     .json(&json!({
+        //         "content": "test",
+        //         "image": "@/Users/t0721/Pictures/black.png"
+        //     }))
+        //     .await;
+        // response.assert_status_ok();
     }
 }
