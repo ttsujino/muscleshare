@@ -108,7 +108,6 @@ mod tests {
     };
     use crate::repositories::PostRepositoryForDb;
     use axum_test::TestServer;
-    use serde_json::json;
     use axum_test::multipart::{Part, MultipartForm};
 
     fn create_app<T: PostRepository>(repository: T) -> Router {
