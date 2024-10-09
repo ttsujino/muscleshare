@@ -24,6 +24,11 @@ const SideMenu = () => {
           <div className={styles.menuItem}>Notifications</div>
           <div className={styles.menuItem}>Profile</div>
         </div>
+        <div>
+          <div className={styles.ButtomItem}>
+            <a href="/api/auth/logout">Logout</a>
+          </div>
+        </div>
       </div>
     </>
   );

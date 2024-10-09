@@ -7,10 +7,13 @@ use axum::{
     Router,
 };
 use repositories::{PostRepository, PostRepositoryForDb};
-use tracing_subscriber;
+// use tracing_subscriber;
 use std::{env, sync::Arc};
 use dotenv::dotenv;
 use sqlx::postgres::PgPoolOptions;
+
+use http::Method;
+use tower_http::cors::{Any, CorsLayer};
 
 use handlers::{create_post, get_all_posts, get_target_user_posts, get_post, delete_post};
 
@@ -24,20 +27,26 @@ async fn main() {
     let database_url = &env::var("DATABASE_URL").expect("DATABASE_URL must be set");
     tracing::info!(database_url, "Start connect database...");
 
+    let cors: CorsLayer = CorsLayer::new()
+    // allow `GET` and `POST` when accessing the resource
+    .allow_methods([Method::GET, Method::POST])
+    // allow requests from any origin
+    .allow_origin(Any);
+
     let pool = PgPoolOptions::new()
         .connect(database_url)
         .await
         .expect("Failed to connect to Database");
     let repository = PostRepositoryForDb::new(pool);
 
-    let app = create_app(repository);
+    let app = create_app(repository, cors);
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 
 }
 
-fn create_app<T: PostRepository>(repository: T) -> Router {
+fn create_app<T: PostRepository>(repository: T, cors: CorsLayer) -> Router {
     Router::new()
         .route("/", get(|| async { "Hello, World!" }))
         .route("/posts", get(get_all_posts::<T>))
@@ -46,4 +55,5 @@ fn create_app<T: PostRepository>(repository: T) -> Router {
         .route("/post/:uuid", get(get_post::<T>))
         .route("/post/:uuid", delete(delete_post::<T>))
         .layer(Extension(Arc::new(repository)))
+        .layer(cors)
 }

@@ -8,7 +8,6 @@ const Footer: React.FC = () => {
     <footer className={styles.footer}>
       <div className={styles.footerContent}>
         <p>© 2024 Muscleshare. All rights reserved.</p>
-        <a href="/api/auth/logout">Logout</a>
       </div>
     </footer>
   );
