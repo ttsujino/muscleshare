@@ -109,6 +109,7 @@ mod tests {
     use crate::repositories::PostRepositoryForDb;
     use axum_test::TestServer;
     use serde_json::json;
+    use axum_test::multipart::{Part, MultipartForm};
 
     fn create_app<T: PostRepository>(repository: T) -> Router {
         Router::new()
@@ -127,13 +128,20 @@ mod tests {
     async fn test_create_post(pool: PgPool) {
         let server = setup_test::<PostRepositoryForDb>(pool).await;
 
+        let image_bytes = include_bytes!("/Users/t0721/Pictures/black.png");
+        let image_part = Part::bytes(image_bytes.as_slice())
+        .file_name("black.png")
+        .mime_type("image/png");
+
+        let multipart_form = MultipartForm::new()
+            .add_text("content", "test")
+            .add_part("image", image_part);
+
         let response = server.post("/post/new/1")
-            .json(&json!({
-                "content": "test",
-                "image": "@/Users/t0721/Pictures/black.png"
-            }))
+            .multipart(multipart_form)
             .await;
-        response.assert_status_ok();
+
+        response.assert_status(StatusCode::CREATED);
     }
 
     #[sqlx::test]
