@@ -96,6 +96,16 @@ pub async fn delete_post<T: PostRepository>(
     Ok(Json(post))
 }
 
+pub async fn get_image(Path(image_id): Path<String>) -> impl IntoResponse {
+    let image_path = format!("./imgs/{}.jpg", image_id);
+    let image_data = fs::read(image_path).await.expect("Failed to read image");
+
+    (
+         [("Content-Type", "image/jpeg")],
+         image_data,
+    )
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -114,6 +124,7 @@ mod tests {
         Router::new()
         .route("/posts", get(get_all_posts::<T>))
         .route("/post/new/:user_id", post(create_post::<T>))
+        .route("/image/:uuid", get(get_image))
         .layer(Extension(Arc::new(repository)))
     }
 
@@ -148,6 +159,15 @@ mod tests {
         let server = setup_test::<PostRepositoryForDb>(pool).await;
 
         let response = server.get("/posts").await;
+        response.assert_status_ok();
+    }
+
+    #[sqlx::test]
+    async fn test_get_image(pool: PgPool) {
+        let server = setup_test::<PostRepositoryForDb>(pool).await;
+
+        let image_id = "9feced0a-591c-4c6e-9583-a3d18ba2e570";
+        let response = server.get(&(format!("/image/{}", image_id))).await;
         response.assert_status_ok();
     }
 }

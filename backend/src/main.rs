@@ -15,7 +15,14 @@ use sqlx::postgres::PgPoolOptions;
 use http::Method;
 use tower_http::cors::{Any, CorsLayer};
 
-use handlers::{create_post, get_all_posts, get_target_user_posts, get_post, delete_post};
+use handlers::{
+    create_post,
+    get_all_posts,
+    get_target_user_posts,
+    get_post,
+    delete_post,
+    get_image
+};
 
 #[tokio::main]
 async fn main() {
@@ -54,6 +61,7 @@ fn create_app<T: PostRepository>(repository: T, cors: CorsLayer) -> Router {
         .route("/post/new/:user_id", post(create_post::<T>))
         .route("/post/:uuid", get(get_post::<T>))
         .route("/post/:uuid", delete(delete_post::<T>))
+        .route("/image/:uuid", get(get_image))
         .layer(Extension(Arc::new(repository)))
         .layer(cors)
 }
