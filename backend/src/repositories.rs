@@ -23,30 +23,13 @@ pub struct UpdatePost {
     // content: String,
 }
 
-#[derive(Debug, Serialize, FromRow)]
-pub struct PostResponse {
-    id: i32,
-    user_id: i32,
-    content: String,
-    image_path: String,
-}
-
-pub fn cast_post_to_post_response(post: Post) -> PostResponse {
-    PostResponse {
-        id: post.id,
-        user_id: post.user_id,
-        content: post.content,
-        image_path: format!("./imgs/{}.jpg", post.image_id),
-    }
-}
-
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
     async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post>;
-    async fn get_post(&self, id: i32) -> anyhow::Result<PostResponse>;
-    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<PostResponse>>;
+    async fn get_post(&self, id: i32) -> anyhow::Result<Post>;
+    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
     async fn delete(&self, id: i32) -> anyhow::Result<Post>;
-    async fn get_all(&self) -> anyhow::Result<Vec<PostResponse>>;
+    async fn get_all(&self) -> anyhow::Result<Vec<Post>>;
 }
 
 #[derive(Debug, Clone)]
@@ -83,7 +66,7 @@ impl PostRepository for PostRepositoryForDb {
         Ok(post)
     }
 
-    async fn get_all(&self) -> anyhow::Result<Vec<PostResponse>> {
+    async fn get_all(&self) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
             SELECT id, user_id, content, image_id
@@ -97,12 +80,10 @@ impl PostRepository for PostRepositoryForDb {
             e
         })?;
 
-        let posts_resp = posts.into_iter().map(cast_post_to_post_response).collect();
-
-        Ok(posts_resp)
+        Ok(posts)
     }
 
-    async fn get_post(&self, id: i32) -> anyhow::Result<PostResponse> {
+    async fn get_post(&self, id: i32) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
             SELECT id, user_id, content, image_id
@@ -118,12 +99,10 @@ impl PostRepository for PostRepositoryForDb {
             e
         })?;
 
-        let post_resp = cast_post_to_post_response(post);
-
-        Ok(post_resp)
+        Ok(post)
     }
 
-    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<PostResponse>> {
+    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
             SELECT id, user_id, content, image_id
@@ -139,9 +118,7 @@ impl PostRepository for PostRepositoryForDb {
             e
         })?;
 
-        let posts_resp = posts.into_iter().map(cast_post_to_post_response).collect();
-
-        Ok(posts_resp)
+        Ok(posts)
     }
 
     async fn delete(&self, id: i32) -> anyhow::Result<Post> {
