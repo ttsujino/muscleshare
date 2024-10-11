@@ -28,3 +28,13 @@ curl -X POST http://localhost:3000/post/new/1 \
 ```bash
 curl -X GET http://localhost:3000/posts
 ```
+
+## Handle SQL
+1. Enter the docker container
+```
+docker exec -it backend_database_1 bash
+```
+2. 
+```
+psql -U admin -d ms_db
+```
