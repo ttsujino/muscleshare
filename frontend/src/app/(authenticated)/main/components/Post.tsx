@@ -4,14 +4,14 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 
-const Post: React.FC<{ title: string; image: string; content: string; user_name: string }> = ({ title, image, content, user_name }) => (
+const Post: React.FC<{ id: string; user_id: string; content: string; image: string }> = ({ id, user_id, content, image }) => (
   <Paper elevation={3} style={{ padding: 16 }}>
     <Typography variant="h6" gutterBottom>
-      {user_name}
+      {user_id}
     </Typography>
-    <img src={image} alt={title} style={{ width: '100%', borderRadius: 8 }} />
+    <img src={image} alt={user_id} style={{ width: '100%', borderRadius: 8 }} />
     <Typography variant="h6" gutterBottom>
-      {title}
+      {id}
     </Typography>
     <Typography variant="body2">
       {content}
@@ -30,11 +30,16 @@ const PostSpace = () => {
       try {
         const response = await axios.get("http://localhost:3000/posts");
         const data = await response.data;
-        setPosts(data);
+        const updatedPosts = data.map((post: any) => ({
+          ...post,
+          image: `http://localhost:3000/image/${post.image_id}`
+        }));
+
+        setPosts(updatedPosts);
       } catch (error) {
         console.error('Error fetching posts:', error);
       }
-    }
+    };
     
     fetchPosts();
   }, [backendApiUrl]);
@@ -55,4 +60,5 @@ const PostSpace = () => {
 };
 
 export default PostSpace;
+
 
