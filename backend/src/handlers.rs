@@ -181,7 +181,7 @@ mod tests {
     async fn test_get_image(pool: PgPool) {
         let server = setup_test::<PostRepositoryForDb>(pool).await;
 
-        let image_id = "9feced0a-591c-4c6e-9583-a3d18ba2e570";
+        let image_id = "image-for-test-get-image";
         let response = server.get(&(format!("/image/{}", image_id))).await;
         response.assert_status_ok();
     }
