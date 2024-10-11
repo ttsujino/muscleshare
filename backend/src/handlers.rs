@@ -119,6 +119,7 @@ mod tests {
     use crate::repositories::PostRepositoryForDb;
     use axum_test::TestServer;
     use axum_test::multipart::{Part, MultipartForm};
+    use crate::repositories::Post;
 
     fn create_app<T: PostRepository>(repository: T) -> Router {
         Router::new()
@@ -134,14 +135,16 @@ mod tests {
         TestServer::new(app).unwrap()
     }
 
+    use std::fs;
+
     #[sqlx::test]
     async fn test_create_post(pool: PgPool) {
         let server = setup_test::<PostRepositoryForDb>(pool).await;
 
-        let image_bytes = include_bytes!("/Users/t0721/Pictures/black.png");
+        let image_bytes = include_bytes!("./test_data/test.jpg");
         let image_part = Part::bytes(image_bytes.as_slice())
-        .file_name("black.png")
-        .mime_type("image/png");
+        .file_name("test.jpg")
+        .mime_type("image/jpeg");
 
         let multipart_form = MultipartForm::new()
             .add_text("content", "test")
@@ -152,7 +155,19 @@ mod tests {
             .await;
 
         response.assert_status(StatusCode::CREATED);
-    }
+
+        let post = response.json::<Post>();
+        assert_eq!(post.user_id, 1);
+        let img_uuid = &post.image_id.to_string();
+        assert!(uuid::Uuid::parse_str(img_uuid).is_ok(), "image_id should be a valid UUID");
+
+        let file_path = format!("./imgs/{}.jpg", img_uuid);
+        assert!(std::path::Path::new(&file_path).exists(), "Image file {} does not exist.", file_path);
+        
+        if let Err(e) = fs::remove_file(&file_path) {
+            tracing::error!("Failed to delete image file {}: {:?}", file_path, e);
+        }
+        }
 
     #[sqlx::test]
     async fn test_get_all_posts(pool: PgPool) {

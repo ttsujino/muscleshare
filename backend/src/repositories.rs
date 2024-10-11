@@ -5,12 +5,12 @@ use sqlx::{PgPool, FromRow};
 use uuid::Uuid;
 use tracing::error;
 
-#[derive(Debug, Serialize, FromRow)]
+#[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Post {
-    id: i32,
-    user_id: i32,
-    content: String,
-    image_id: Uuid,
+    pub id: i32,
+    pub user_id: i32,
+    pub content: String,
+    pub image_id: Uuid,
 }
 
 #[derive(Debug, Deserialize)]
