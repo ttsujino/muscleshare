@@ -9,13 +9,37 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: backend
+
+    services:
+      postgres:
+        image: postgres
+        # refer: https://hub.docker.com/_/postgres
+        env:
+          POSTGRES_PASSWORD: admin
+          POSTGRES_USER: admin
+          POSTGRES_DB: test_db
+          DATABASE_URL: postgresql://admin:admin@localhost:4321/test_db
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 4321:5432
+
     steps:
     - uses: actions/checkout@v4
+    - name: Install sqlx-cli
+      run: cargo install
+    - name: Set up PostgreSQL
+      run: |
+        sqlx db create
+        sqlx migrate run
     - name: Build
-      run: |
-        cd backend
-        cargo build --verbose
+      run: cargo build --verbose
     - name: Run tests
-      run: |
-        cd backend
-        cargo test --verbose
+      run: cargo test --verbose
