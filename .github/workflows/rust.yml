@@ -43,4 +43,6 @@ jobs:
     - name: Build
       run: cargo build --verbose
     - name: Run tests
+      env:
+        DATABASE_URL: postgresql://admin:admin@localhost:4321/test_db
       run: cargo test --verbose
