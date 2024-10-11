@@ -35,8 +35,10 @@ jobs:
     - name: Install sqlx-cli
       run: cargo install --version=0.8.0 sqlx-cli --no-default-features --features postgres
     - name: Set up PostgreSQL
+      env:
+        DATABASE_URL: postgresql://admin:admin@localhost:4321/test_db
       run: |
-        sqlx db create --database-url postgresql://admin:admin@localhost:4321/test_db
+        sqlx db create
         sqlx migrate run
     - name: Build
       run: cargo build --verbose

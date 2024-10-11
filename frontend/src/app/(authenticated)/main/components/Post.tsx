@@ -3,53 +3,6 @@ import { Container, Paper, Typography } from '@mui/material'; import Grid from '
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-// const posts = [
-//   {
-//     id: 1,
-//     title: 'Post 1',
-//     image: 'https://via.placeholder.com/300',
-//     content: 'This is the content of the first post.',
-//     user_name: 'user1'
-//   },
-//   {
-//     id: 2,
-//     title: 'Post 2',
-//     image: 'https://via.placeholder.com/300',
-//     content: 'This is the content of the second post.',
-//     user_name: 'user2'
-//   },
-//   {
-//     id: 3,
-//     title: 'Post 3',
-//     image: 'https://via.placeholder.com/300',
-//     content: 'This is the content of the third post.',
-//     user_name: 'user3'
-//   },
-//   {
-//     id: 4,
-//     title: 'Post 4',
-//     image: 'https://via.placeholder.com/300',
-//     content: 'This is the content of the fourth post.',
-//     user_name: 'user4'
-//   },
-//   {
-//     id: 5,
-//     title: 'Post 5',
-//     image: 'https://via.placeholder.com/300',
-//     content: 'This is the content of the fifth post.',
-//     user_name: 'user5'
-//   },
-//   {
-//     id: 6,
-//     title: 'Post 6',
-//     image: 'https://via.placeholder.com/300',
-//     content: 'This is the content of the sixth post.',
-//     user_name: 'user6'
-//   }
-// ];
-
-
-
 
 const Post: React.FC<{ title: string; image: string; content: string; user_name: string }> = ({ title, image, content, user_name }) => (
   <Paper elevation={3} style={{ padding: 16 }}>
