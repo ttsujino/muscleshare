@@ -33,8 +33,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install sqlx-cli
-      run: cargo install
+    - name: Install dependencies
+      run: cargo install --path .
     - name: Set up PostgreSQL
       run: |
         sqlx db create
