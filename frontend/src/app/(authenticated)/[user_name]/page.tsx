@@ -25,6 +25,7 @@ export default function Home({ params }: { params: { user_name: string } }) {
       <div className={`${styles.container} ${styles.container}`}>
         <div style={{ minWidth: '1000px', margin: '0 auto' }}>
           <MainTop user_name={ params.user_name } />
+          {/* <MainTop user_name={user?.name || undefined} /> */}
           <PostSpace />
         </div>
       </div>
