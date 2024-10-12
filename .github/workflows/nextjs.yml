@@ -3,7 +3,6 @@ name: Build Next.js App
 on:
   # Runs on pushes targeting the default branch
   push:
-  pull_request:
 
 jobs:
   # Build job
