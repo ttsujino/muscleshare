@@ -86,10 +86,10 @@ pub async fn get_post<T: PostRepository>(
 
 pub async fn delete_post<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
-    Path(id): Path<i32>,
+    Path(image_id): Path<String>,
 ) -> Result<impl IntoResponse, StatusCode> {
     let post = repository
-        .delete(id)
+        .delete(Uuid::parse_str(&image_id).unwrap())
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 

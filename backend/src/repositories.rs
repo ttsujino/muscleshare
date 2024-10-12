@@ -4,6 +4,7 @@ use serde::{Deserialize, Serialize};
 use sqlx::{PgPool, FromRow};
 use uuid::Uuid;
 use tracing::error;
+use tokio::fs;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Post {
@@ -28,7 +29,7 @@ pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'stati
     async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post>;
     async fn get_post(&self, id: i32) -> anyhow::Result<Post>;
     async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
-    async fn delete(&self, id: i32) -> anyhow::Result<Post>;
+    async fn delete(&self, image_id: Uuid) -> anyhow::Result<Post>;
     async fn get_all(&self) -> anyhow::Result<Vec<Post>>;
 }
 
@@ -121,21 +122,26 @@ impl PostRepository for PostRepositoryForDb {
         Ok(posts)
     }
 
-    async fn delete(&self, id: i32) -> anyhow::Result<Post> {
+    async fn delete(&self, image_id: Uuid) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
             DELETE FROM posts
-            WHERE id = $1
-            RETURNING id, user_id, content
+            WHERE image_id = $1
+            RETURNING id, user_id, content, image_id
             "#,
         )
-        .bind(id)
+        .bind(image_id)
         .fetch_one(&self.pool)
         .await
         .map_err(|e| {
             error!("Failed to delete post: {:?}", e);
             e
         })?;
+        
+        let file_path = format!("./imgs/{}.jpg", image_id);
+        if let Err(e) = fs::remove_file(file_path).await {
+            error!("Failed to delete image: {:?}", e);
+        }
 
         Ok(post)
     }
