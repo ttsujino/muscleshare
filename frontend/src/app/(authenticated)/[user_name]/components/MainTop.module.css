@@ -14,7 +14,7 @@
   left: 13%; /* top_containerからの相対位置 */
 }
 
-.icon {
+.user_icon {
   object-fit: cover;
   border-radius: 50%;
   width: 150px;
@@ -30,4 +30,11 @@
   position: absolute; /* 絶対位置に変更 */
   top: 30%; /* top_containerからの相対位置 */
   left: 40%; /* top_containerからの相対位置 */
+}
+
+.create_icon {
+  margin: 0; /* マージンをリセット */
+  position: absolute; /* 絶対位置に変更 */
+  top: 20%; /* top_containerからの相対位置 */
+  left: 80%; /* top_containerからの相対位置 */
 }
