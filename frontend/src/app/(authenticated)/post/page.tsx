@@ -25,10 +25,11 @@ export default function PostPage() {
 
     if (response.ok) {
       // 投稿成功時の処理
-      console.log("投稿が成功しました");
+      alert('投稿完了');
+      window.location.href = '/main';
     } else {
       // 投稿失敗時の処理
-      console.error("投稿に失敗しました");
+      alert("投稿に失敗しました");
     }
   };
 

@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-interface Post {
+export interface Post {
     id: string;
     user_id: string;
     content: string;
     image_id: string;
+    image?: string;
 }
 
 export const fetchPosts = async (): Promise<Post[] | undefined> => {
@@ -24,7 +25,7 @@ export const fetchPosts = async (): Promise<Post[] | undefined> => {
 
 export const fetchPost = async (image_id: string): Promise<Post | undefined> => {
     try {
-        const response = await axios.get(`${process.env.BACKEND_API_URL}/post/${image_id}`);
+        const response = await axios.get(`http://localhost:3000/post/${image_id}`);
         const data: Post = await response.data;
         const updatedPost = {
             ...data,
@@ -33,5 +34,14 @@ export const fetchPost = async (image_id: string): Promise<Post | undefined> => 
         return updatedPost;
     } catch (error) {
         console.error('Error fetching post:', error);
+    }
+}
+
+export const deletePost = async (image_id: string) => {
+    try {
+        await axios.delete(`http://localhost:3000/post/${image_id}`);
+        alert('削除しました');
+    } catch (error) {
+        console.error('削除エラー:', error);
     }
 }
