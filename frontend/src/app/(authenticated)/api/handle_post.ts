@@ -8,6 +8,24 @@ export interface Post {
     image?: string;
 }
 
+export const createPost = async (content: string, image: File | null) => {
+    const formData = new FormData();
+    formData.append("content", content);
+    if (image) {
+      formData.append("image", image);
+    }
+
+    const response = await fetch("http://localhost:3000/post/new/1", {
+      method: "POST",
+      headers: {
+        'Accept': 'application/json',
+      },
+      body: formData,
+    });
+
+    return response;
+  };
+
 export const fetchPosts = async (): Promise<Post[] | undefined> => {
     try {
         const response = await axios.get("http://localhost:3000/posts");
