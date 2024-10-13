@@ -1,5 +1,6 @@
 import axios from 'axios';
 
+
 export interface Post {
     id: string;
     user_id: string;
