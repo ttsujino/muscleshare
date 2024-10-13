@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Paper, Typography } from '@mui/material'; import Grid from '@mui/material/Grid2';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { fetchPosts } from '../../api/handle_post';
 
 
 const Post: React.FC<{ id: string; user_id: string; content: string; image: string }> = ({ id, user_id, content, image }) => (
@@ -26,22 +26,12 @@ const PostSpace = () => {
   // console.log(backendApiUrl);
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/posts");
-        const data = await response.data;
-        const updatedPosts = data.map((post: any) => ({
-          ...post,
-          image: `http://localhost:3000/image/${post.image_id}`
-        }));
-
-        setPosts(updatedPosts);
-      } catch (error) {
-        console.error('Error fetching posts:', error);
-      }
+    const loadPosts = async () => { // 関数名を変更
+      const updatedPosts = await fetchPosts(); // fetchPostsを呼び出す
+      setPosts(updatedPosts);
     };
     
-    fetchPosts();
+    loadPosts();
   }, [backendApiUrl]);
   
   return (
