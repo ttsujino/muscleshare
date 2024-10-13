@@ -8,7 +8,7 @@ import { deletePost } from "../../api/handle_post";
 
 const handleDeletePost = async (image_id: string) => {
     await deletePost(image_id);
-    window.location.href = '/main'; // リダイレクト
+    window.location.href = '/main';
 };
 
 
@@ -36,7 +36,7 @@ export default function ImagePage({ params }: { params: { image_id: string } }) 
 
   useEffect(() => {
     const loadPost = async () => {
-      const updatedPost = await fetchPost(image_id) || null;
+      const updatedPost = await fetchPost(image_id);
       setPost(updatedPost);
     };
     

@@ -27,7 +27,7 @@ export const createPost = async (content: string, image: File | null) => {
     return response;
   };
 
-export const fetchPosts = async (): Promise<Post[] | undefined> => {
+export const fetchPosts = async (): Promise<Post[] | null> => {
     try {
         const response = await axios.get("http://localhost:3000/posts");
         const data: Post[] = await response.data;
@@ -39,10 +39,11 @@ export const fetchPosts = async (): Promise<Post[] | undefined> => {
         return updatedPosts;
     } catch (error) {
         console.error('Error fetching posts:', error);
+        return null;
     }
 }
 
-export const fetchPost = async (image_id: string): Promise<Post | undefined> => {
+export const fetchPost = async (image_id: string): Promise<Post | null> => {
     try {
         const response = await axios.get(`http://localhost:3000/post/${image_id}`);
         const data: Post = await response.data;
@@ -53,6 +54,7 @@ export const fetchPost = async (image_id: string): Promise<Post | undefined> => 
         return updatedPost;
     } catch (error) {
         console.error('Error fetching post:', error);
+        return null;
     }
 }
 

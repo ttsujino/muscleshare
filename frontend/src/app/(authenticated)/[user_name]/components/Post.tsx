@@ -2,12 +2,10 @@ import React from 'react';
 import { Container, Paper, Typography } from '@mui/material'; import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
 import { fetchPosts } from '../../api/handle_post';
-
-
- // Start of Selection
 import { useRouter } from 'next/navigation';
+import { Post } from '../../api/handle_post';
 
-const Post: React.FC<{ id: string; user_id: string; content: string; image_id: string, image: string }> = ({ id, user_id, content, image_id, image }) => {
+const DisplayPost: React.FC<{ id: string; user_id: string; content: string; image_id: string, image?: string }> = ({ id, user_id, content, image_id, image }) => {
   const router = useRouter();
 
   const handleImageClick = () => {
@@ -37,7 +35,7 @@ const Post: React.FC<{ id: string; user_id: string; content: string; image_id: s
 
 const PostSpace = () => {
 
-  const [posts, setPosts] = useState<any[]>([]);
+  const [posts, setPosts] = useState<Post[] | null>(null);
   const backendApiUrl = process.env.BACKEND_API_URL;
   // console.log(backendApiUrl);
 
@@ -54,11 +52,11 @@ const PostSpace = () => {
     <div>
       <Container>
         <Grid container spacing={2} justifyContent="center">
-          {posts.map((post) => (
+          {posts ? posts.map((post) => (
             <Grid size={4} key={post.id}>
-              <Post {...post} />
+              <DisplayPost {...post} />
             </Grid>
-          ))}
+          )) : null}
         </Grid>
       </Container>
     </div>
