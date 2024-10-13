@@ -18,7 +18,7 @@ use tower_http::cors::{Any, CorsLayer};
 use handlers::{
     create_post,
     get_all_posts,
-    get_target_user_posts,
+    get_user_posts,
     get_post,
     delete_post,
     get_image
@@ -55,11 +55,11 @@ async fn main() {
 
 fn create_app<T: PostRepository>(repository: T, cors: CorsLayer) -> Router {
     Router::new()
-        .route("/", get(|| async { "Hello, World!" }))
-        .route("/posts", get(get_all_posts::<T>))
-        .route("/posts/:user_id", get(get_target_user_posts::<T>))
+        .route("/health", get(|| async { "Hello, World!" }))
         .route("/post/new/:user_id", post(create_post::<T>))
         .route("/post/:uuid", get(get_post::<T>))
+        .route("/posts/:user_id", get(get_user_posts::<T>))
+        .route("/posts", get(get_all_posts::<T>))
         .route("/post/:uuid", delete(delete_post::<T>))
         .route("/image/:uuid", get(get_image))
         .layer(Extension(Arc::new(repository)))

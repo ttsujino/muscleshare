@@ -20,8 +20,8 @@ make dev
 1. Add data to the database
 ```bash
 curl -X POST http://localhost:3000/post/new/1 \
-     -H "Content-Type: application/json" \
-     -d '{"title": "New Post", "content": "The content of the new post."}'
+  -F "content=test" \
+  -F "image=@/Users/t0721/Desktop/muscleshare/backend/imgs/image-for-test-get-image.jpg"
 ```
 
 2. Retrieve all data from the database

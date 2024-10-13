@@ -48,40 +48,42 @@ pub async fn create_post<T: PostRepository>(
     Ok((StatusCode::CREATED, Json(post)))
 }
 
+pub async fn get_post<T: PostRepository>(
+    Extension(repository): Extension<Arc<T>>,
+    Path(image_id): Path<String>,
+) -> Result<impl IntoResponse, StatusCode> {
+
+    let image_id_uuid = Uuid::parse_str(&image_id).unwrap();
+    let post = repository
+        .get_post(image_id_uuid)
+        .await
+        .or(Err(StatusCode::NOT_FOUND))?;
+
+    Ok(Json(post))
+}
+
+pub async fn get_user_posts<T: PostRepository>(
+    Extension(repository): Extension<Arc<T>>,
+    Path(user_id): Path<i32>,
+) -> Result<impl IntoResponse, StatusCode> {
+    let posts = repository
+        .get_user_posts(user_id)
+        .await
+        .or(Err(StatusCode::NOT_FOUND))?;
+
+    Ok(Json(posts))
+}
+
 pub async fn get_all_posts<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
 ) -> Result<impl IntoResponse, StatusCode> {
 
     let posts = repository
-        .get_all()
+        .get_all_posts()
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
     Ok(Json(posts))
-}
-
-pub async fn get_target_user_posts<T: PostRepository>(
-    Extension(repository): Extension<Arc<T>>,
-    Path(user_id): Path<i32>,
-) -> Result<impl IntoResponse, StatusCode> {
-    let posts = repository
-        .get_posts(user_id)
-        .await
-        .or(Err(StatusCode::NOT_FOUND))?;
-
-    Ok(Json(posts))
-}
-
-pub async fn get_post<T: PostRepository>(
-    Extension(repository): Extension<Arc<T>>,
-    Path(id): Path<i32>,
-) -> Result<impl IntoResponse, StatusCode> {
-    let post = repository
-        .get_post(id)
-        .await
-        .or(Err(StatusCode::NOT_FOUND))?;
-
-    Ok(Json(post))
 }
 
 pub async fn delete_post<T: PostRepository>(

@@ -27,10 +27,10 @@ pub struct UpdatePost {
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
     async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post>;
-    async fn get_post(&self, id: i32) -> anyhow::Result<Post>;
-    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
+    async fn get_post(&self, image_id: Uuid) -> anyhow::Result<Post>;
+    async fn get_user_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
+    async fn get_all_posts(&self) -> anyhow::Result<Vec<Post>>;
     async fn delete(&self, image_id: Uuid) -> anyhow::Result<Post>;
-    async fn get_all(&self) -> anyhow::Result<Vec<Post>>;
 }
 
 #[derive(Debug, Clone)]
@@ -67,32 +67,15 @@ impl PostRepository for PostRepositoryForDb {
         Ok(post)
     }
 
-    async fn get_all(&self) -> anyhow::Result<Vec<Post>> {
-        let posts = sqlx::query_as::<_, Post>(
-            r#"
-            SELECT id, user_id, content, image_id
-            FROM posts
-            "#,
-        )
-        .fetch_all(&self.pool)
-        .await
-        .map_err(|e| {
-            error!("Failed to get posts: {:?}", e);
-            e
-        })?;
-
-        Ok(posts)
-    }
-
-    async fn get_post(&self, id: i32) -> anyhow::Result<Post> {
+    async fn get_post(&self, image_id: Uuid) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
             SELECT id, user_id, content, image_id
             FROM posts
-            WHERE id = $1
+            WHERE image_id = $1
             "#,
         )
-        .bind(id)
+        .bind(image_id)
         .fetch_one(&self.pool)
         .await
         .map_err(|e| {
@@ -103,7 +86,7 @@ impl PostRepository for PostRepositoryForDb {
         Ok(post)
     }
 
-    async fn get_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>> {
+    async fn get_user_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
             SELECT id, user_id, content, image_id
@@ -112,6 +95,23 @@ impl PostRepository for PostRepositoryForDb {
             "#,
         )
         .bind(user_id)
+        .fetch_all(&self.pool)
+        .await
+        .map_err(|e| {
+            error!("Failed to get posts: {:?}", e);
+            e
+        })?;
+
+        Ok(posts)
+    }
+
+    async fn get_all_posts(&self) -> anyhow::Result<Vec<Post>> {
+        let posts = sqlx::query_as::<_, Post>(
+            r#"
+            SELECT id, user_id, content, image_id
+            FROM posts
+            "#,
+        )
         .fetch_all(&self.pool)
         .await
         .map_err(|e| {
