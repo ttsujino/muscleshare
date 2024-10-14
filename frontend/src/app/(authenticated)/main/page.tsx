@@ -1,0 +1,18 @@
+'use client';
+import { useUser } from "@auth0/nextjs-auth0/client";
+import { useEffect } from "react";
+
+export default function MainPage() {
+  const { user, isLoading } = useUser();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      window.location.href = `/${user.nickname}`;
+    }
+  }, [isLoading, user]);
+
+  return (
+    <div>
+    </div>
+  );
+}
