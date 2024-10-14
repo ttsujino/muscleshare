@@ -1,3 +1,4 @@
+'use client';
 import * as React from 'react';
 import { loadCSS } from 'fg-loadcss';
 import styles from './MainTop.module.css';

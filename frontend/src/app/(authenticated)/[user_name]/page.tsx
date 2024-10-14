@@ -1,31 +1,23 @@
-"use client";
 import styles from "./page.module.css";
 import PostSpace from "./components/Post";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import MainTop from "./components/MainTop";
-import Loading from "./components/Loading";
+import { getUserByUsername } from "../api/handle_user_info";
+import ClientSidePost from "./ClientSide";
 
-export default function Home({ params }: { params: { user_name: string } }) {
-  const { user, error, isLoading } = useUser();
+export default async function Home({ params }: { params: { user_name: string } }) {
+  const userInfo = await getUserByUsername(params.user_name);
 
-  if (isLoading) {
-    return (
-      <div className={`${styles.loading}`}>
-        <Loading />
-      </div>
-    )
-  }
-
-  if (error) {
-    return <div>{error.message}</div>; // エラーが発生した場合の表示
+  if (!userInfo) {
+    // ユーザーが見つからなかった場合、404を表示
+    return <div>ユーザーが見つかりませんでした。</div>;
   }
 
   return (
     <main>
-      <div className={`${styles.container} ${styles.container}`}>
+      <div className={`${styles.container}`}>
         <div style={{ minWidth: '1000px', margin: '0 auto' }}>
-          <MainTop user_name={ params.user_name } />
-          {/* <MainTop user_name={user?.name || undefined} /> */}
+          <MainTop user_name={userInfo.nickname || 'ゲスト'} />
+          {/* <ClientSidePost userInfo={userInfo} /> */}
           <PostSpace />
         </div>
       </div>
