@@ -31,7 +31,7 @@ const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
                     <p>{user_name}</p>
                 </div>
                 <div>
-                    <Image src={icon} alt="main" width={150} height={150} className={styles.user_icon} />
+                    <Image src={icon ?? ''} alt="main" width={150} height={150} className={styles.user_icon} />
                 </div>
             </div>
             <div className={styles.introduction}>
