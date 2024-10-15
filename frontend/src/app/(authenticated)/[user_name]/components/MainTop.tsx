@@ -4,9 +4,9 @@ import { loadCSS } from 'fg-loadcss';
 import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
-import { useUser } from '@auth0/nextjs-auth0/client';
+import { useState } from 'react';
 
-const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
+const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
 
     React.useEffect(() => {
         const node = loadCSS(
@@ -21,17 +21,14 @@ const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
 
     }, []);
 
-    let { user, error, isLoading } = useUser();
-    let icon = user?.picture;
-
     return (
         <div className={styles.top_container}>
             <div>
                 <div className={styles.user_name}>
-                    <p>{user_name}</p>
+                    <p>{user_info.nickname}</p>
                 </div>
                 <div>
-                    <Image src={icon ?? ''} alt="main" width={150} height={150} className={styles.user_icon} />
+                    <Image src={user_info.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} />
                 </div>
             </div>
             <div className={styles.introduction}>
