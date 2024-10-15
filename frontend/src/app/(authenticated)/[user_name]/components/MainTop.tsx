@@ -4,6 +4,7 @@ import { loadCSS } from 'fg-loadcss';
 import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
+import { useUser } from '@auth0/nextjs-auth0/client';
 
 const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
 
@@ -17,7 +18,11 @@ const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
         return () => {
           node.parentNode!.removeChild(node);
         };
-      }, []);
+
+    }, []);
+
+    let { user, error, isLoading } = useUser();
+    let icon = user?.picture;
 
     return (
         <div className={styles.top_container}>
@@ -26,7 +31,7 @@ const MainTop: React.FC<{ user_name?: string }> = ({ user_name }) => {
                     <p>{user_name}</p>
                 </div>
                 <div>
-                    <Image src="/sample/black.png" alt="main" width={150} height={150} className={styles.user_icon} />
+                    <Image src={icon} alt="main" width={150} height={150} className={styles.user_icon} />
                 </div>
             </div>
             <div className={styles.introduction}>
