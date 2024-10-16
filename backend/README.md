@@ -19,7 +19,7 @@ make dev
 ## How to use
 1. Add data to the database
 ```bash
-curl -X POST http://localhost:3000/post/new/1 \
+curl -X POST http://localhost:3000/post/new/87fa0f17-0272-e0dc-8338-86dad7e6fc9f \
   -F "content=test" \
   -F "image=@/Users/t0721/Desktop/muscleshare/backend/imgs/image-for-test-get-image.jpg"
 ```

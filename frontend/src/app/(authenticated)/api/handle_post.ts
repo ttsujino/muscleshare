@@ -5,7 +5,6 @@ export interface Post {
     id: string;
     user_id: string;
     content: string;
-    image_id: string;
     image?: string;
 }
 

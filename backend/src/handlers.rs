@@ -12,12 +12,13 @@ use tokio::io::AsyncWriteExt;
 
 pub async fn create_post<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
-    Path(user_id): Path<i32>,
+    Path(user_id): Path<String>,
     mut multipart: Multipart,
 ) -> Result<impl IntoResponse, StatusCode> {
 
     let mut content = String::new();
-    let image_id = Uuid::new_v4();
+    let image_uuid = Uuid::new_v4();
+    let user_uuid = Uuid::parse_str(&user_id).map_err(|_| StatusCode::BAD_REQUEST)?;
     if metadata("./imgs").await.is_err() {
         fs::create_dir("./imgs").await.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     }
@@ -30,7 +31,7 @@ pub async fn create_post<T: PostRepository>(
             }
             "image" => {
                 let image = field.bytes().await.unwrap();
-                let image_fname = format!("{}.jpg", image_id);
+                let image_fname = format!("{}.jpg", image_uuid);
                 let mut file = fs::File::create(format!("./imgs/{}", image_fname)).await.unwrap();
                 file.write_all(&image).await.unwrap();
             }
@@ -41,7 +42,7 @@ pub async fn create_post<T: PostRepository>(
     }
 
     let post = repository
-        .create(user_id, content, image_id)
+        .create(image_uuid, user_uuid, content)
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
@@ -53,9 +54,9 @@ pub async fn get_post<T: PostRepository>(
     Path(image_id): Path<String>,
 ) -> Result<impl IntoResponse, StatusCode> {
 
-    let image_id_uuid = Uuid::parse_str(&image_id).unwrap();
+    let image_uuid = Uuid::parse_str(&image_id).map_err(|_| StatusCode::BAD_REQUEST)?;
     let post = repository
-        .get_post(image_id_uuid)
+        .get_post(image_uuid)
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
@@ -64,10 +65,11 @@ pub async fn get_post<T: PostRepository>(
 
 pub async fn get_user_posts<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
-    Path(user_id): Path<i32>,
+    Path(user_id): Path<String>,
 ) -> Result<impl IntoResponse, StatusCode> {
+    let user_id_uuid = Uuid::parse_str(&user_id).map_err(|_| StatusCode::BAD_REQUEST)?;
     let posts = repository
-        .get_user_posts(user_id)
+        .get_user_posts(user_id_uuid)
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
@@ -152,16 +154,17 @@ mod tests {
             .add_text("content", "test")
             .add_part("image", image_part);
 
-        let response = server.post("/post/new/1")
+        let user_id_uuid = Uuid::new_v4();
+        let user_id = user_id_uuid.to_string();
+        let response = server.post(&format!("/post/new/{}", user_id))
             .multipart(multipart_form)
             .await;
 
         response.assert_status(StatusCode::CREATED);
 
         let post = response.json::<Post>();
-        assert_eq!(post.user_id, 1);
-        let img_uuid = &post.image_id.to_string();
-        assert!(uuid::Uuid::parse_str(img_uuid).is_ok(), "image_id should be a valid UUID");
+        assert_eq!(post.user_id, user_id_uuid);
+        let img_uuid = &post.id.to_string();
 
         let file_path = format!("./imgs/{}.jpg", img_uuid);
         assert!(std::path::Path::new(&file_path).exists(), "Image file {} does not exist.", file_path);

@@ -8,10 +8,9 @@ use tokio::fs;
 
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Post {
-    pub id: i32,
-    pub user_id: i32,
+    pub id: Uuid,
+    pub user_id: Uuid,
     pub content: String,
-    pub image_id: Uuid,
 }
 
 #[derive(Debug, Deserialize)]
@@ -26,9 +25,9 @@ pub struct UpdatePost {
 
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
-    async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post>;
+    async fn create(&self, image_id: Uuid, user_id: Uuid, content: String) -> anyhow::Result<Post>;
     async fn get_post(&self, image_id: Uuid) -> anyhow::Result<Post>;
-    async fn get_user_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>>;
+    async fn get_user_posts(&self, user_id: Uuid) -> anyhow::Result<Vec<Post>>;
     async fn get_all_posts(&self) -> anyhow::Result<Vec<Post>>;
     async fn delete(&self, image_id: Uuid) -> anyhow::Result<Post>;
 }
@@ -46,17 +45,17 @@ impl PostRepositoryForDb {
 
 #[async_trait]
 impl PostRepository for PostRepositoryForDb {
-    async fn create(&self, user_id: i32, content: String, image_id: Uuid) -> anyhow::Result<Post> {
+    async fn create(&self, image_id: Uuid, user_id: Uuid, content: String) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
-            INSERT INTO posts (user_id, content, image_id)
-            VALUES ($1, $2, $3::UUID)
-            RETURNING id, user_id, content, image_id
+            INSERT INTO posts (id, user_id, content)
+            VALUES ($1::UUID, $2::UUID, $3)
+            RETURNING id, user_id, content
             "#,
         )
+        .bind(image_id)
         .bind(user_id)
         .bind(content)
-        .bind(image_id)
         .fetch_one(&self.pool)
         .await
         .map_err(|e| {
@@ -70,9 +69,9 @@ impl PostRepository for PostRepositoryForDb {
     async fn get_post(&self, image_id: Uuid) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
-            SELECT id, user_id, content, image_id
+            SELECT id, user_id, content
             FROM posts
-            WHERE image_id = $1
+            WHERE id = $1
             "#,
         )
         .bind(image_id)
@@ -86,10 +85,10 @@ impl PostRepository for PostRepositoryForDb {
         Ok(post)
     }
 
-    async fn get_user_posts(&self, user_id: i32) -> anyhow::Result<Vec<Post>> {
+    async fn get_user_posts(&self, user_id: Uuid) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
-            SELECT id, user_id, content, image_id
+            SELECT id, user_id, content
             FROM posts
             WHERE user_id = $1
             "#,
@@ -108,7 +107,7 @@ impl PostRepository for PostRepositoryForDb {
     async fn get_all_posts(&self) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
-            SELECT id, user_id, content, image_id
+            SELECT id, user_id, content
             FROM posts
             "#,
         )
@@ -126,8 +125,8 @@ impl PostRepository for PostRepositoryForDb {
         let post = sqlx::query_as::<_, Post>(
             r#"
             DELETE FROM posts
-            WHERE image_id = $1
-            RETURNING id, user_id, content, image_id
+            WHERE id = $1
+            RETURNING id, user_id, content
             "#,
         )
         .bind(image_id)

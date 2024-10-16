@@ -1,7 +1,7 @@
 CREATE TABLE posts
 (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER NOT NULL,
+    id UUID PRIMARY KEY,
+    user_id UUID NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
