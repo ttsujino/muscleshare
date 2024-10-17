@@ -33,8 +33,9 @@ export const fetchPosts = async (): Promise<Post[] | null> => {
         const data: Post[] = await response.data;
         const updatedPosts = data.map((post) => ({
             ...post,
-            image: `http://localhost:3000/image/${post.image_id}`
+            image: `http://localhost:3000/image/${post.id}`
         }));
+        console.log('updatedPosts:', updatedPosts);
     
         return updatedPosts;
     } catch (error) {
@@ -49,7 +50,7 @@ export const fetchPost = async (image_id: string): Promise<Post | null> => {
         const data: Post = await response.data;
         const updatedPost = {
             ...data,
-            image: `http://localhost:3000/image/${data.image_id}`
+            image: `http://localhost:3000/image/${data.id}`
         };
         return updatedPost;
     } catch (error) {

@@ -12,9 +12,9 @@ const handleDeletePost = async (image_id: string) => {
 };
 
 
-const DisplayPost: React.FC<{ id: string; user_id: string; content: string; image_id: string, image: string }> = ({ id, user_id, content, image_id, image }) => (
+const DisplayPost: React.FC<{ id: string, user_id: string, content: string, image: string }> = ({ id, user_id, content, image }) => (
   <Paper elevation={3} style={{ padding: 50 }}>
-    <button onClick={() => handleDeletePost(image_id)} style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}>削除</button>
+    <button onClick={() => handleDeletePost(id)} style={{ background: 'none', border: 'none', color: 'blue', cursor: 'pointer' }}>削除</button>
     <Typography variant="h6" gutterBottom>
       user_id: {user_id}
     </Typography>
@@ -37,6 +37,7 @@ export default function ImagePage({ params }: { params: { image_id: string } }) 
   useEffect(() => {
     const loadPost = async () => {
       const updatedPost = await fetchPost(image_id);
+      console.log('updatedPost:', updatedPost);
       setPost(updatedPost);
     };
     

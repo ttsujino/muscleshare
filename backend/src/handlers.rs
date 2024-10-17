@@ -66,9 +66,8 @@ pub async fn get_user_posts<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
     Path(user_id): Path<String>,
 ) -> Result<impl IntoResponse, StatusCode> {
-    let user_id_uuid = Uuid::parse_str(&user_id).map_err(|_| StatusCode::BAD_REQUEST)?;
     let posts = repository
-        .get_user_posts(user_id_uuid)
+        .get_user_posts(user_id)
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 

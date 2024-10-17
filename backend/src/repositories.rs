@@ -27,7 +27,7 @@ pub struct UpdatePost {
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
     async fn create(&self, image_id: Uuid, user_id: String, content: String) -> anyhow::Result<Post>;
     async fn get_post(&self, image_id: Uuid) -> anyhow::Result<Post>;
-    async fn get_user_posts(&self, user_id: Uuid) -> anyhow::Result<Vec<Post>>;
+    async fn get_user_posts(&self, user_id: String) -> anyhow::Result<Vec<Post>>;
     async fn get_all_posts(&self) -> anyhow::Result<Vec<Post>>;
     async fn delete(&self, image_id: Uuid) -> anyhow::Result<Post>;
 }
@@ -85,7 +85,7 @@ impl PostRepository for PostRepositoryForDb {
         Ok(post)
     }
 
-    async fn get_user_posts(&self, user_id: Uuid) -> anyhow::Result<Vec<Post>> {
+    async fn get_user_posts(&self, user_id: String) -> anyhow::Result<Vec<Post>> {
         let posts = sqlx::query_as::<_, Post>(
             r#"
             SELECT id, user_id, content
