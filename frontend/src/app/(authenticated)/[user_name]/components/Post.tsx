@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import { fetchPosts } from '../../api/handle_post';
 import { useRouter } from 'next/navigation';
 import { Post } from '../../api/handle_post';
+import Image from 'next/image';
 import Loading from './Loading';
 
 const DisplayPost: React.FC<{ id: string; user_id: string; content: string, image?: string }> = ({ id, user_id, content, image }) => {
@@ -19,11 +20,13 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
       <Typography variant="h6" gutterBottom>
         {user_id}
       </Typography>
-      <img 
-        src={image} 
-        alt={user_id} 
-        style={{ width: '100%', borderRadius: 8, cursor: 'pointer' }} 
-        onClick={handleImageClick} 
+      <Image
+        src={image}
+        alt={user_id}
+        width={500}
+        height={300}
+        style={{ width: '100%', height: 'auto', borderRadius: 8, cursor: 'pointer' }}
+        onClick={handleImageClick}
       />
       <Typography variant="h6" gutterBottom>
         {id}
@@ -46,10 +49,10 @@ const PostSpace = () => {
       setPosts(updatedPosts);
       setLoading(false); // データ取得後にローディングを終了
     };
-    
+
     loadPosts();
   }, [backendApiUrl]);
-  
+
   return (
     <div>
       <Container>
@@ -72,5 +75,3 @@ const PostSpace = () => {
 };
 
 export default PostSpace;
-
-

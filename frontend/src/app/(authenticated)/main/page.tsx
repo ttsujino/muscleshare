@@ -7,7 +7,7 @@ export default function MainPage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      window.location.href = `/${user.nickname}`;
+      window.location.assign(`/${user.nickname}`);
     }
   }, [isLoading, user]);
 
