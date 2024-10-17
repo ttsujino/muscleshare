@@ -22,7 +22,7 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
         {user_id}
       </Typography>
       <Image
-        src={image}
+        src={image || '/default.jpg'}
         alt={user_id}
         width={500}
         height={300}
