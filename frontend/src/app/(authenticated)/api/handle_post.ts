@@ -45,22 +45,23 @@ export const fetchUserPosts = async (user_id: string): Promise<Post[] | null> =>
     }
 }
 
-export const fetchAllPosts = async (): Promise<Post[] | null> => {
-    try {
-        const response = await axios.get("http://localhost:3000/posts");
-        const data: Post[] = await response.data;
-        const updatedPosts = data.map((post) => ({
-            ...post,
-            image: `http://localhost:3000/image/${post.id}`
-        }));
-        console.log('updatedPosts:', updatedPosts);
+// 現時点では未使用
+// export const fetchAllPosts = async (): Promise<Post[] | null> => {
+//     try {
+//         const response = await axios.get("http://localhost:3000/posts");
+//         const data: Post[] = await response.data;
+//         const updatedPosts = data.map((post) => ({
+//             ...post,
+//             image: `http://localhost:3000/image/${post.id}`
+//         }));
+//         console.log('updatedPosts:', updatedPosts);
 
-        return updatedPosts;
-    } catch (error) {
-        console.error('Error fetching posts:', error);
-        return null;
-    }
-}
+//         return updatedPosts;
+//     } catch (error) {
+//         console.error('Error fetching posts:', error);
+//         return null;
+//     }
+// }
 
 export const fetchPost = async (image_id: string): Promise<Post | null> => {
     try {
