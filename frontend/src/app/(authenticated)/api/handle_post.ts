@@ -8,14 +8,15 @@ export interface Post {
     image?: string;
 }
 
-export const createPost = async (content: string, image: File | null) => {
+export const createPost = async (content: string, image: File, user_id: string | null | undefined) => {
     const formData = new FormData();
     formData.append("content", content);
     if (image) {
       formData.append("image", image);
     }
 
-    const response = await fetch("http://localhost:3000/post/new/1", {
+    console.log('request user_id:', user_id);
+    const response = await fetch(`http://localhost:3000/post/new/${user_id}`, {
       method: "POST",
       headers: {
         'Accept': 'application/json',

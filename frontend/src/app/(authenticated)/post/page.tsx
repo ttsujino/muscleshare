@@ -2,14 +2,22 @@
 "use client";
 import { useState } from "react";
 import { createPost } from "../api/handle_post";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export default function PostPage() {
+  const { user, error, isLoading } = useUser();
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await createPost(content, image);
+    if (!image) {
+      alert("画像を選択してください");
+      return;
+    }
+    let user_id = user?.sub;
+    console.log(user)
+    const response = await createPost(content, image, user_id);
 
     if (response.ok) {
       // 投稿成功時の処理

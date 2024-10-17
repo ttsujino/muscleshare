@@ -7,11 +7,11 @@ import { useRouter } from 'next/navigation';
 import { Post } from '../../api/handle_post';
 import Loading from './Loading';
 
-const DisplayPost: React.FC<{ id: string; user_id: string; content: string; image_id: string, image?: string }> = ({ id, user_id, content, image_id, image }) => {
+const DisplayPost: React.FC<{ id: string; user_id: string; content: string, image?: string }> = ({ id, user_id, content, image }) => {
   const router = useRouter();
 
   const handleImageClick = () => {
-    router.push(`/post/${image_id}`);
+    router.push(`/post/${id}`);
   };
 
   return (

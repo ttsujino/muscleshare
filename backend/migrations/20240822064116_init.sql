@@ -1,7 +1,7 @@
 CREATE TABLE posts
 (
     id UUID PRIMARY KEY,
-    user_id UUID NOT NULL,
+    user_id VARCHAR(255) NOT NULL,
     content TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

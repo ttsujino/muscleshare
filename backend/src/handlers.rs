@@ -18,7 +18,6 @@ pub async fn create_post<T: PostRepository>(
 
     let mut content = String::new();
     let image_uuid = Uuid::new_v4();
-    let user_uuid = Uuid::parse_str(&user_id).map_err(|_| StatusCode::BAD_REQUEST)?;
     if metadata("./imgs").await.is_err() {
         fs::create_dir("./imgs").await.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
     }
@@ -42,7 +41,7 @@ pub async fn create_post<T: PostRepository>(
     }
 
     let post = repository
-        .create(image_uuid, user_uuid, content)
+        .create(image_uuid, user_id, content)
         .await
         .or(Err(StatusCode::NOT_FOUND))?;
 
@@ -163,7 +162,7 @@ mod tests {
         response.assert_status(StatusCode::CREATED);
 
         let post = response.json::<Post>();
-        assert_eq!(post.user_id, user_id_uuid);
+        assert_eq!(post.user_id, user_id);
         let img_uuid = &post.id.to_string();
 
         let file_path = format!("./imgs/{}.jpg", img_uuid);

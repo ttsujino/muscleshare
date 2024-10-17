@@ -9,7 +9,7 @@ use tokio::fs;
 #[derive(Debug, Serialize, Deserialize, FromRow)]
 pub struct Post {
     pub id: Uuid,
-    pub user_id: Uuid,
+    pub user_id: String,
     pub content: String,
 }
 
@@ -25,7 +25,7 @@ pub struct UpdatePost {
 
 #[async_trait]
 pub trait PostRepository: Clone + std::marker::Send + std::marker::Sync + 'static {
-    async fn create(&self, image_id: Uuid, user_id: Uuid, content: String) -> anyhow::Result<Post>;
+    async fn create(&self, image_id: Uuid, user_id: String, content: String) -> anyhow::Result<Post>;
     async fn get_post(&self, image_id: Uuid) -> anyhow::Result<Post>;
     async fn get_user_posts(&self, user_id: Uuid) -> anyhow::Result<Vec<Post>>;
     async fn get_all_posts(&self) -> anyhow::Result<Vec<Post>>;
@@ -45,11 +45,11 @@ impl PostRepositoryForDb {
 
 #[async_trait]
 impl PostRepository for PostRepositoryForDb {
-    async fn create(&self, image_id: Uuid, user_id: Uuid, content: String) -> anyhow::Result<Post> {
+    async fn create(&self, image_id: Uuid, user_id: String, content: String) -> anyhow::Result<Post> {
         let post = sqlx::query_as::<_, Post>(
             r#"
             INSERT INTO posts (id, user_id, content)
-            VALUES ($1::UUID, $2::UUID, $3)
+            VALUES ($1::UUID, $2, $3)
             RETURNING id, user_id, content
             "#,
         )
