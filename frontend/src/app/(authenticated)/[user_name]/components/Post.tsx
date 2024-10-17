@@ -28,6 +28,7 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
         height={300}
         style={{ width: '100%', height: 'auto', borderRadius: 8, cursor: 'pointer' }}
         onClick={handleImageClick}
+        priority
       />
       <Typography variant="h6" gutterBottom>
         {id}

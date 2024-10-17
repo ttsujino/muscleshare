@@ -14,7 +14,7 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
           // Inject before JSS
           document.querySelector('#font-awesome-css') as HTMLElement || document.head.firstChild as HTMLElement,
         );
-    
+
         return () => {
           node.parentNode!.removeChild(node);
         };
@@ -28,7 +28,7 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
                     <p>{user_info.nickname}</p>
                 </div>
                 <div>
-                    <Image src={user_info.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} />
+                    <Image src={user_info.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} priority />
                 </div>
             </div>
             <div className={styles.introduction}>
