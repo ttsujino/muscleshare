@@ -48,10 +48,13 @@ const PostSpace = () => {
 
   useEffect(() => {
     const loadPosts = async () => {
-      if (user & user.sub) {
-        const updatedPosts = await fetchUserPosts(user.sub);
-        setPosts(updatedPosts);
+      if (!user?.sub) {
+        setLoading(false);
+        return;
       }
+
+      const updatedPosts = await fetchUserPosts(user.sub);
+      setPosts(updatedPosts);
       setLoading(false);
     };
 
