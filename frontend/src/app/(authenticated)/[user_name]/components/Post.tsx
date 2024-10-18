@@ -2,10 +2,12 @@
 import React from 'react';
 import { Container, Paper, Typography } from '@mui/material'; import Grid from '@mui/material/Grid2';
 import { useEffect, useState } from 'react';
-import { fetchPosts } from '../../api/handle_post';
+import { fetchUserPosts } from '../../api/handle_post';
 import { useRouter } from 'next/navigation';
 import { Post } from '../../api/handle_post';
+import Image from 'next/image';
 import Loading from './Loading';
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 const DisplayPost: React.FC<{ id: string; user_id: string; content: string, image?: string }> = ({ id, user_id, content, image }) => {
   const router = useRouter();
@@ -19,11 +21,14 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
       <Typography variant="h6" gutterBottom>
         {user_id}
       </Typography>
-      <img 
-        src={image} 
-        alt={user_id} 
-        style={{ width: '100%', borderRadius: 8, cursor: 'pointer' }} 
-        onClick={handleImageClick} 
+      <Image
+        src={image || '/default.jpg'}
+        alt={user_id}
+        width={500}
+        height={300}
+        style={{ width: '100%', height: 'auto', borderRadius: 8, cursor: 'pointer' }}
+        onClick={handleImageClick}
+        priority
       />
       <Typography variant="h6" gutterBottom>
         {id}
@@ -39,17 +44,25 @@ const PostSpace = () => {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // ローディング状態を追加
   const backendApiUrl = process.env.BACKEND_API_URL;
+  const { user, isLoading, error } = useUser();
 
   useEffect(() => {
     const loadPosts = async () => {
-      const updatedPosts = await fetchPosts();
+      if (!user?.sub) {
+        setLoading(false);
+        return;
+      }
+
+      const updatedPosts = await fetchUserPosts(user.sub);
       setPosts(updatedPosts);
-      setLoading(false); // データ取得後にローディングを終了
+      setLoading(false);
     };
-    
-    loadPosts();
-  }, [backendApiUrl]);
-  
+
+    if (!isLoading) {
+      loadPosts();
+    }
+  }, [user, isLoading, backendApiUrl]);
+
   return (
     <div>
       <Container>
@@ -72,5 +85,3 @@ const PostSpace = () => {
 };
 
 export default PostSpace;
-
-

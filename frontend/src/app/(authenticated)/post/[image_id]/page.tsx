@@ -5,6 +5,7 @@ import { fetchPost, Post }  from "../../api/handle_post";
 import { Container, Paper, Typography } from '@mui/material';
 import style from './page.module.css';
 import { deletePost } from "../../api/handle_post";
+import Image from 'next/image';
 
 const handleDeletePost = async (image_id: string) => {
     await deletePost(image_id);
@@ -18,7 +19,7 @@ const DisplayPost: React.FC<{ id: string, user_id: string, content: string, imag
     <Typography variant="h6" gutterBottom>
       user_id: {user_id}
     </Typography>
-    <img src={image} alt={user_id} style={{ width: '100%', borderRadius: 8 }} />
+    <Image src={image} alt={user_id} width={500} height={300} style={{ width: '100%', borderRadius: 8 }} />
     <Typography variant="h6" gutterBottom>
       id: {id}
     </Typography>
@@ -40,9 +41,9 @@ export default function ImagePage({ params }: { params: { image_id: string } }) 
       console.log('updatedPost:', updatedPost);
       setPost(updatedPost);
     };
-    
+
     loadPost();
-  }, [backendApiUrl]);
+  }, [backendApiUrl, image_id]);
 
   useEffect(() => {
     if (post !== null) {
