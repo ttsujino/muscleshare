@@ -3,6 +3,8 @@ import { useState } from "react";
 import styles from "./update.module.css";
 import Image from 'next/image';
 
+// TODO: サーバーサイドの処理とクライアントサイドの処理を分けたい
+
 export default function UpdatePage() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
