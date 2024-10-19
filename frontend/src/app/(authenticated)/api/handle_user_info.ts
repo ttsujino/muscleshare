@@ -1,7 +1,9 @@
+import { Interface } from "readline";
+import axios from "axios";
 
 // Auth0 Management APIのURL
-const auth0Domain = process.env.AUTH0_DOMAIN;
-const auth0Token = process.env.AUTH0_API_TOKEN;
+const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
+const auth0Token = process.env.NEXT_PUBLIC_AUTH0_API_TOKEN;
 
 export const getUserByUsername = async (username: string) => {
     const query = `nickname:${username}`;
@@ -37,3 +39,31 @@ export const getUserByUsername = async (username: string) => {
 //     res.status(500).json({ message: 'エラーが発生しました' });
 //   }
 // }
+
+interface updateUserInfo {
+  nickname?: string;
+  icon?: string;
+  user_metadata: { bio: string; };
+}
+
+export const updateUser = async (userId: string, userInfo: updateUserInfo) => {
+  console.log("auth0Domain: ", auth0Domain);
+  let request_url = `https://${auth0Domain}/api/v2/users/${userId}`
+  console.log("request_url: ", request_url);
+  console.log("request userInfo: ", userInfo);
+  const response = await axios.patch(request_url, userInfo, {
+    headers: {
+      'Authorization': `Bearer ${auth0Token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }
+  });
+  console.log("response: ", response.data);
+
+  if (response.status !== 200) {
+      return null;
+  }
+  console.log("response.data: ", response.data);
+
+  return response.data;
+};

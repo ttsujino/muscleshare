@@ -36,7 +36,6 @@ export const fetchUserPosts = async (user_id: string): Promise<Post[] | null> =>
             ...post,
             image: `http://localhost:3000/image/${post.id}`
         }));
-        console.log('updatedPosts:', updatedPosts);
 
         return updatedPosts;
     } catch (error) {

@@ -5,8 +5,10 @@ import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
 import { useState } from 'react';
+import { getUserByUsername } from '../../api/handle_user_info';
 
 const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
+    const [userInfo, setUserInfo] = useState(user_info);
 
     React.useEffect(() => {
         const node = loadCSS(
@@ -21,19 +23,27 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
 
     }, []);
 
+    React.useEffect(() => {
+        const fetchUserInfo = async () => {
+            const user = await getUserByUsername(user_info.nickname);
+            setUserInfo(user);
+            console.log('user in MainTop:', user);
+        };
+        fetchUserInfo();
+    }, []);
+
     return (
         <div className={styles.top_container}>
             <div>
                 <div className={styles.user_name}>
-                    <p>{user_info.nickname}</p>
+                    <p>{userInfo.nickname}</p>
                 </div>
                 <div>
-                    <Image src={user_info.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} priority />
+                    <Image src={userInfo.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} priority />
                 </div>
             </div>
             <div className={styles.introduction}>
-                <p>自己紹介</p>
-                <p>自己紹介文が入ります。</p>
+                <p>{userInfo.user_metadata.bio}</p>
             </div>
             <div>
                 <a href="/post">
