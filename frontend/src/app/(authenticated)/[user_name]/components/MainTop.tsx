@@ -7,8 +7,8 @@ import Icon from '@mui/material/Icon';
 import { useState } from 'react';
 import { getUserByUsername } from '../../api/handle_user_info';
 
-const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
-    const [userInfo, setUserInfo] = useState(user_info);
+const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
+    const [userInfo, setUserInfo] = useState<{ picture?: string; nickname?: string; user_metadata?: { bio?: string } }>({});
 
     React.useEffect(() => {
         const node = loadCSS(
@@ -25,7 +25,7 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
 
     React.useEffect(() => {
         const fetchUserInfo = async () => {
-            const user = await getUserByUsername(user_info.nickname);
+            const user = await getUserByUsername(user_name);
             setUserInfo(user);
             console.log('user in MainTop:', user);
         };
@@ -39,11 +39,18 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
                     <p>{userInfo.nickname}</p>
                 </div>
                 <div>
-                    <Image src={userInfo.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} priority />
+                    <Image
+                        src={userInfo.picture ?? '/default_icon.png'}
+                        alt="main"
+                        width={150}
+                        height={150}
+                        className={styles.user_icon}
+                        priority
+                    />
                 </div>
             </div>
             <div className={styles.introduction}>
-                <p>{userInfo.user_metadata.bio}</p>
+                <p>{userInfo?.user_metadata?.bio ?? ""}</p>
             </div>
             <div>
                 <a href="/post">

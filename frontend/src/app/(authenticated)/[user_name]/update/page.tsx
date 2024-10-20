@@ -19,7 +19,7 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
       setAuthUserId(user.user_id);
       if (user) {
         setUserId(user.nickname);
-        setBio(user.user_metadata.bio);
+        setBio(user?.user_metadata?.bio ?? '');
         setSelectedImage(user.picture);
       }
     }
