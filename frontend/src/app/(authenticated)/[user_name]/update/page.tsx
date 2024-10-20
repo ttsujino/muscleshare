@@ -97,11 +97,19 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
           />
         </div>
       </div>
-      <div className={styles['form-example']}>
+      <div
+        className={styles['form-example']}
+        style={{ cursor: 'pointer' }}
+        onClick={() => 
+          (document.querySelector('input[type="submit"]') as HTMLInputElement)?.click()
+        }
+      >
         <input
           type="submit"
-          value="Update Profile!!"
+          // value="Update Profile!!!"
+          style={{ display: 'none' }}
         />
+        Update Profile!!
       </div>
     </form>
   );

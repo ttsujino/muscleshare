@@ -22,7 +22,10 @@ const SideMenu = () => {
           <div className={styles.menuItem} onClick={() => window.location.assign('/main')}>Home</div>
         </div>
         <div>
-          <div className={styles.ButtomItem}>
+          <div
+            className={styles.ButtomItem}
+            onClick={() => document.querySelector('a[href="/api/auth/logout"]')?.click()}
+          >
             <a href="/api/auth/logout">Logout</a>
           </div>
         </div>
