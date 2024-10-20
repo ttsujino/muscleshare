@@ -45,7 +45,7 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
     };
     const result = await updateUser(authUserId, updateUserInfo);
     if (result) {
-      window.location.href = `/${userId}`;
+      window.location.href = `/main`;
     } else {
       alert('プロフィールの更新に失敗しました。');
     }
