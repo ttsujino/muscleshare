@@ -24,7 +24,7 @@ const SideMenu = () => {
         <div>
           <div
             className={styles.ButtomItem}
-            onClick={() => document.querySelector('a[href="/api/auth/logout"]')?.click()}
+            onClick={() => (document.querySelector('a[href="/api/auth/logout"]') as HTMLInputElement)?.click()}
           >
             <a href="/api/auth/logout">Logout</a>
           </div>
