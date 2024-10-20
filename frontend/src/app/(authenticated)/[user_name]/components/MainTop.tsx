@@ -5,7 +5,7 @@ import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
 import { useState } from 'react';
-import { getUserByUsername } from '../../api/handle_user_info';
+import { getUserByAttribute } from '../../api/handle_user_info';
 
 const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
     const [userInfo, setUserInfo] = useState<{ picture?: string; nickname?: string; user_metadata?: { bio?: string } }>({});
@@ -25,9 +25,8 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
 
     React.useEffect(() => {
         const fetchUserInfo = async () => {
-            const user = await getUserByUsername(user_name);
+            const user = await getUserByAttribute("nickname", user_name);
             setUserInfo(user);
-            console.log('user in MainTop:', user);
         };
         fetchUserInfo();
     }, []);
@@ -36,12 +35,12 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
         <div className={styles.top_container}>
             <div>
                 <div className={styles.user_name}>
-                    <p>{userInfo.nickname}</p>
+                    <p>{user_name}</p>
                 </div>
                 <div>
                     <a href={`/${user_name}/update`}>
                         <Image
-                            src={userInfo.picture ?? '/default_icon.png'}
+                            src={userInfo?.picture ?? '/default_icon.png'}
                             alt="main"
                             width={150}
                             height={150}

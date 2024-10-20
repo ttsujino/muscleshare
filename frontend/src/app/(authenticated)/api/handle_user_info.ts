@@ -5,8 +5,8 @@ import axios from "axios";
 const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
 const auth0Token = process.env.NEXT_PUBLIC_AUTH0_API_TOKEN;
 
-export const getUserByUsername = async (username: string) => {
-    const query = `nickname:${username}`;
+export const getUserByAttribute = async (attribute: string, param: string) => {
+    const query = `${attribute}:${param}`;
     let request_url = `https://${auth0Domain}/api/v2/users?q=${query}&search_engine=v3`
     const response = await fetch(request_url, {
       method: 'GET',
