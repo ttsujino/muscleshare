@@ -39,14 +39,16 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
                     <p>{userInfo.nickname}</p>
                 </div>
                 <div>
-                    <Image
-                        src={userInfo.picture ?? '/default_icon.png'}
-                        alt="main"
-                        width={150}
-                        height={150}
-                        className={styles.user_icon}
-                        priority
-                    />
+                    <a href={`/${user_name}/update`}>
+                        <Image
+                            src={userInfo.picture ?? '/default_icon.png'}
+                            alt="main"
+                            width={150}
+                            height={150}
+                            className={styles.user_icon}
+                            priority
+                        />
+                    </a>
                 </div>
             </div>
             <div className={styles.introduction}>
