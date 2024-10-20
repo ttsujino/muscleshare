@@ -1,8 +1,8 @@
 ---
-name: Feature Request
-about: New Feature
-title: "feat: "
-labels: enhancement
+name: Bug Report
+about: Bug
+title: "bug: "
+labels: bug
 assignees: ttsujino
 
 ---
