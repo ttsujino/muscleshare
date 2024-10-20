@@ -20,9 +20,6 @@ const SideMenu = () => {
       <div className={`${styles.sideMenu} ${menuOpen ? styles.open : ''}`}>
         <div className={styles.menuItems}>
           <div className={styles.menuItem} onClick={() => window.location.assign('/main')}>Home</div>
-          <div className={styles.menuItem}>Search</div>
-          <div className={styles.menuItem}>Notifications</div>
-          <div className={styles.menuItem}>Profile</div>
         </div>
         <div>
           <div className={styles.ButtomItem}>
