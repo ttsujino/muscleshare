@@ -46,6 +46,8 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
     };
     const result = await updateUser(authUserId, updateUserInfo);
     if (result) {
+      // DBが更新されるのを待つため、1秒待ってからリダイレクト
+      await new Promise(resolve => setTimeout(resolve, 1000));
       window.location.href = `/${userId}`;
     } else {
       alert('プロフィールの更新に失敗しました。');

@@ -6,23 +6,25 @@ const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
 const auth0Token = process.env.NEXT_PUBLIC_AUTH0_API_TOKEN;
 
 export const getUserByAttribute = async (attribute: string, param: string) => {
-    const query = `${attribute}:${param}`;
-    let request_url = `https://${auth0Domain}/api/v2/users?q=${query}&search_engine=v3`
-    const response = await fetch(request_url, {
-      method: 'GET',
+  const query = `${attribute}:${param}`;
+  const request_url = `https://${auth0Domain}/api/v2/users?q=${query}&search_engine=v3`;
+
+  try {
+    const response = await axios.get(request_url, {
       headers: {
         'Authorization': `Bearer ${auth0Token}`,
         'Content-Type': 'application/json',
       },
     });
-  
-    if (!response.ok) {
-        return null;
-    }
-  
-    const users = await response.json();
-    return users.length > 0 ? users[0] : null;  // 該当するユーザーが存在する場合は最初のユーザーを返す
-  };
+    console.log("response: ", response.data);
+
+    const users = response.data;
+    return users.length > 0 ? users[0] : null;
+  } catch (error) {
+    console.error("Error fetching user by attribute:", error);
+    return null;
+  }
+};
 
 // export default async function handler(req: NextApiRequest, res: NextApiResponse) {
 //   const { user_name } = req.query;
