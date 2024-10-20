@@ -2,7 +2,7 @@
 import { useState } from "react";
 import styles from "./update.module.css";
 import Image from 'next/image';
-import { getUserByUsername, updateUser } from "../../api/handle_user_info";
+import { getUserByAttribute, updateUser } from "../../api/handle_user_info";
 import { useEffect } from "react";
 
 // サーバーサイドとクライアントサイドの処理を分けたい
@@ -13,13 +13,14 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
   const [bio, setBio] = useState<string>('');
   const [authUserId, setAuthUserId] = useState<string>('');
 
+  // 現在のユーザー情報を取得
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getUserByUsername(userId);
+      const user = await getUserByAttribute("nickname", userId);
       setAuthUserId(user.user_id);
       if (user) {
         setUserId(user.nickname);
-        setBio(user.user_metadata.bio);
+        setBio(user?.user_metadata?.bio ?? '');
         setSelectedImage(user.picture);
       }
     }
@@ -39,7 +40,7 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const updateUserInfo = {
-      // nickname: userId,
+      nickname: userId,
       // icon: selectedImage || '/default_icon.png',
       user_metadata: { bio: bio },
     };

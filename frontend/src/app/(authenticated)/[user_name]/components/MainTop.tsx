@@ -5,10 +5,10 @@ import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
 import { useState } from 'react';
-import { getUserByUsername } from '../../api/handle_user_info';
+import { getUserByAttribute } from '../../api/handle_user_info';
 
-const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
-    const [userInfo, setUserInfo] = useState(user_info);
+const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
+    const [userInfo, setUserInfo] = useState<{ picture?: string; nickname?: string; user_metadata?: { bio?: string } }>({});
 
     React.useEffect(() => {
         const node = loadCSS(
@@ -25,9 +25,8 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
 
     React.useEffect(() => {
         const fetchUserInfo = async () => {
-            const user = await getUserByUsername(user_info.nickname);
+            const user = await getUserByAttribute("nickname", user_name);
             setUserInfo(user);
-            console.log('user in MainTop:', user);
         };
         fetchUserInfo();
     }, []);
@@ -36,14 +35,23 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
         <div className={styles.top_container}>
             <div>
                 <div className={styles.user_name}>
-                    <p>{userInfo.nickname}</p>
+                    <p>{user_name}</p>
                 </div>
                 <div>
-                    <Image src={userInfo.picture ?? ''} alt="main" width={150} height={150} className={styles.user_icon} priority />
+                    <a href={`/${user_name}/update`}>
+                        <Image
+                            src={userInfo?.picture ?? '/default_icon.png'}
+                            alt="main"
+                            width={150}
+                            height={150}
+                            className={styles.user_icon}
+                            priority
+                        />
+                    </a>
                 </div>
             </div>
             <div className={styles.introduction}>
-                <p>{userInfo.user_metadata.bio}</p>
+                <p>{userInfo?.user_metadata?.bio ?? ""}</p>
             </div>
             <div>
                 <a href="/post">
