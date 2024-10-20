@@ -38,7 +38,6 @@ export default function ImagePage({ params }: { params: { image_id: string } }) 
   useEffect(() => {
     const loadPost = async () => {
       const updatedPost = await fetchPost(image_id);
-      console.log('updatedPost:', updatedPost);
       setPost(updatedPost);
     };
 

@@ -15,7 +15,6 @@ export const createPost = async (content: string, image: File, user_id: string |
       formData.append("image", image);
     }
 
-    console.log('request user_id:', user_id);
     const response = await fetch(`http://localhost:3000/post/new/${user_id}`, {
       method: "POST",
       headers: {
@@ -29,7 +28,6 @@ export const createPost = async (content: string, image: File, user_id: string |
 
 export const fetchUserPosts = async (user_id: string): Promise<Post[] | null> => {
     try {
-        console.log('fetchUserPosts user_id:', user_id);
         const response = await axios.get(`http://localhost:3000/posts/${user_id}`);
         const data: Post[] = await response.data;
         const updatedPosts = data.map((post) => ({

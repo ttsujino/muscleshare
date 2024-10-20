@@ -16,7 +16,6 @@ export default function PostPage() {
       return;
     }
     let user_id = user?.sub;
-    console.log(user)
     const response = await createPost(content, image, user_id);
 
     if (response.ok) {

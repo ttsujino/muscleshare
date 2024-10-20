@@ -16,7 +16,6 @@ export const getUserByAttribute = async (attribute: string, param: string) => {
         'Content-Type': 'application/json',
       },
     });
-    console.log("response: ", response.data);
 
     const users = response.data;
     return users.length > 0 ? users[0] : null;
@@ -49,10 +48,7 @@ interface updateUserInfo {
 }
 
 export const updateUser = async (userId: string, userInfo: updateUserInfo) => {
-  console.log("auth0Domain: ", auth0Domain);
   let request_url = `https://${auth0Domain}/api/v2/users/${userId}`
-  console.log("request_url: ", request_url);
-  console.log("request userInfo: ", userInfo);
   const response = await axios.patch(request_url, userInfo, {
     headers: {
       'Authorization': `Bearer ${auth0Token}`,
@@ -60,12 +56,10 @@ export const updateUser = async (userId: string, userInfo: updateUserInfo) => {
       'Accept': 'application/json',
     }
   });
-  console.log("response: ", response.data);
 
   if (response.status !== 200) {
       return null;
   }
-  console.log("response.data: ", response.data);
 
   return response.data;
 };
