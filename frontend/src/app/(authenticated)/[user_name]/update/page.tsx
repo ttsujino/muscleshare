@@ -91,8 +91,8 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
           <Image
             src={selectedImage || '/default_icon.png'}
             alt="Selected"
-            width={500}
-            height={500} style={{ maxWidth: '100%', height: 'auto' }}
+            width={200}
+            height={200}
             priority
           />
         </div>
