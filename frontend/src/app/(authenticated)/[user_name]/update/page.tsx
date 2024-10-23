@@ -57,7 +57,6 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
         picture: imagePath,
       },
     };
-    console.log('updateUserInfo:', updateUserInfo);
     const result = await updateUser(authUserId, updateUserInfo);
     if (result) {
       // DBが更新されるのを待つため、1秒待ってからリダイレクト

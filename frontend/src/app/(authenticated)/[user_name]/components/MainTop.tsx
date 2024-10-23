@@ -4,11 +4,11 @@ import { loadCSS } from 'fg-loadcss';
 import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
-import { useState } from 'react';
-import { getUserByAttribute } from '../../api/handle_user_info';
+import { useUserContext } from '../../context/UserContext';
 
 const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
-    const [userInfo, setUserInfo] = useState<{ picture?: string; nickname?: string; user_metadata?: { bio?: string; picture?: string } }>({});
+    const { userInfo: contextUserInfo } = useUserContext();
+    console.log(contextUserInfo);
 
     React.useEffect(() => {
         const node = loadCSS(
@@ -21,14 +21,6 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
           node.parentNode!.removeChild(node);
         };
 
-    }, []);
-
-    React.useEffect(() => {
-        const fetchUserInfo = async () => {
-            const user = await getUserByAttribute("nickname", user_name);
-            setUserInfo(user);
-        };
-        fetchUserInfo();
     }, []);
 
     // NOTE: アイコン更新後にキャッシュされた古い画像が表示されないようキャッシュバスターを使用
@@ -44,9 +36,9 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
                     <a href={`/${user_name}/update`}>
                         <Image
                             src={
-                                (userInfo?.user_metadata?.picture 
-                                ?? userInfo?.picture 
-                                ?? '/default_icon.png') + cacheBuster
+                                contextUserInfo?.icon 
+                                ? contextUserInfo.icon + cacheBuster 
+                                : '/default_icon.png'
                             }
                             alt="main"
                             width={150}
@@ -58,7 +50,7 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
                 </div>
             </div>
             <div className={styles.introduction}>
-                <p>{userInfo?.user_metadata?.bio ?? ""}</p>
+                <p>{contextUserInfo.bio ?? ""}</p>
             </div>
             <div>
                 <a href="/post">
