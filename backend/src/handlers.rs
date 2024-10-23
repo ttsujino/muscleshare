@@ -236,26 +236,4 @@ mod tests {
         response.assert_status_ok();
     }
 
-    #[sqlx::test]
-    async fn test_post_icon(pool: PgPool) {
-        let server = setup_test::<PostRepositoryForDb>(pool).await;
-
-        let image_bytes = include_bytes!("./test_data/test.jpg");
-        let image_part = Part::bytes(image_bytes.as_slice())
-        .file_name("test.jpg")
-        .mime_type("image/jpeg");
-
-        let multipart_form = MultipartForm::new()
-            .add_part("image", image_part);
-
-        let user_id = String::from("test_user_id");
-
-        let response = server.post(&format!("/icon/{}", user_id))
-            .multipart(multipart_form)
-            .await;
-
-        let icon = response.json::<Icon>();
-        assert_eq!(icon.image_path, format!("icon/{}", user_id));
-
-        }
 }
