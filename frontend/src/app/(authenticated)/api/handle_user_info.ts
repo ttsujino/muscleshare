@@ -5,7 +5,7 @@ import axios from "axios";
 const auth0Domain = process.env.NEXT_PUBLIC_AUTH0_DOMAIN;
 const auth0Token = process.env.NEXT_PUBLIC_AUTH0_API_TOKEN;
 
-export const getUserByAttribute = async (attribute: string, param: string) => {
+export const getUserByAttribute = async (attribute: string, param: string | null | undefined) => {
   const query = `${attribute}:${param}`;
   const request_url = `https://${auth0Domain}/api/v2/users?q=${query}&search_engine=v3`;
 

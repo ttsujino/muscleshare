@@ -27,7 +27,6 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
         const fetchUserInfo = async () => {
             const user = await getUserByAttribute("nickname", user_name);
             setUserInfo(user);
-            console.log('user:', user.user_metadata.picture);
         };
         fetchUserInfo();
     }, []);
