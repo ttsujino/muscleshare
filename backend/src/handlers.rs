@@ -9,6 +9,7 @@ use uuid::Uuid;
 use tokio::fs;
 use tokio::fs::metadata;
 use tokio::io::AsyncWriteExt;
+use serde::{Deserialize, Serialize};
 
 pub async fn create_post<T: PostRepository>(
     Extension(repository): Extension<Arc<T>>,
@@ -108,6 +109,52 @@ pub async fn get_image(Path(image_id): Path<String>) -> impl IntoResponse {
     )
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Icon {
+    image_path: String,
+}
+
+pub async fn post_icon(
+    Path(user_id): Path<String>,
+    mut multipart: Multipart,
+) -> Result<impl IntoResponse, StatusCode> {
+
+    if metadata("./icons").await.is_err() {
+        fs::create_dir("./icons").await.map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    }
+    let image_path = format!("./icons/{}.jpg", user_id);
+
+    while let Some(field) = multipart.next_field().await.unwrap() {
+        let param_name = field.name().unwrap();
+        match param_name {
+            "image" => {
+                let image = field.bytes().await.unwrap();
+                let mut file = fs::File::create(&image_path).await.unwrap();
+                file.write_all(&image).await.unwrap();
+            }
+            _ => {
+                tracing::warn!("Unexpected field: {}", param_name);
+            }
+        }
+    }
+    let image_path = format!("icon/{}", user_id);
+    
+    let icon = Icon {image_path};
+
+    Ok((StatusCode::CREATED, Json(icon)))
+}
+
+pub async fn get_icon(Path(user_id): Path<String>) -> impl IntoResponse {
+
+    let image_path = format!("./icons/{}.jpg", user_id);
+    let image_data = fs::read(image_path.clone()).await.expect("Failed to read image");
+
+    (
+         [("Content-Type", "image/jpeg")],
+         image_data,
+    )
+}
+
 
 #[cfg(test)]
 mod tests {
@@ -188,4 +235,27 @@ mod tests {
         let response = server.get(&(format!("/image/{}", image_id))).await;
         response.assert_status_ok();
     }
+
+    #[sqlx::test]
+    async fn test_post_icon(pool: PgPool) {
+        let server = setup_test::<PostRepositoryForDb>(pool).await;
+
+        let image_bytes = include_bytes!("./test_data/test.jpg");
+        let image_part = Part::bytes(image_bytes.as_slice())
+        .file_name("test.jpg")
+        .mime_type("image/jpeg");
+
+        let multipart_form = MultipartForm::new()
+            .add_part("image", image_part);
+
+        let user_id = String::from("test_user_id");
+
+        let response = server.post(&format!("/icon/{}", user_id))
+            .multipart(multipart_form)
+            .await;
+
+        let icon = response.json::<Icon>();
+        assert_eq!(icon.image_path, format!("icon/{}", user_id));
+
+        }
 }

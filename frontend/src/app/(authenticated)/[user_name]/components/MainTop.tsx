@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { getUserByAttribute } from '../../api/handle_user_info';
 
 const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
-    const [userInfo, setUserInfo] = useState<{ picture?: string; nickname?: string; user_metadata?: { bio?: string } }>({});
+    const [userInfo, setUserInfo] = useState<{ picture?: string; nickname?: string; user_metadata?: { bio?: string; picture?: string } }>({});
 
     React.useEffect(() => {
         const node = loadCSS(
@@ -27,9 +27,13 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
         const fetchUserInfo = async () => {
             const user = await getUserByAttribute("nickname", user_name);
             setUserInfo(user);
+            console.log('user:', user.user_metadata.picture);
         };
         fetchUserInfo();
     }, []);
+
+    // NOTE: アイコン更新後にキャッシュされた古い画像が表示されないようキャッシュバスターを使用
+    const cacheBuster = `?v=${new Date().getTime()}`;
 
     return (
         <div className={styles.top_container}>
@@ -40,7 +44,11 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
                 <div>
                     <a href={`/${user_name}/update`}>
                         <Image
-                            src={userInfo?.picture ?? '/default_icon.png'}
+                            src={
+                                (userInfo?.user_metadata?.picture 
+                                ?? userInfo?.picture 
+                                ?? '/default_icon.png') + cacheBuster
+                            }
                             alt="main"
                             width={150}
                             height={150}

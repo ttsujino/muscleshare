@@ -42,9 +42,11 @@ export const getUserByAttribute = async (attribute: string, param: string) => {
 // }
 
 interface updateUserInfo {
-  nickname?: string;
-  icon?: string;
-  user_metadata: { bio: string; };
+  nickname: string;
+  user_metadata: {
+    bio: string;
+    picture: string | null;
+  };
 }
 
 export const updateUser = async (userId: string, userInfo: updateUserInfo) => {
