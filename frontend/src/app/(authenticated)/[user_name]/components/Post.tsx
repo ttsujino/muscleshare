@@ -56,7 +56,7 @@ const PostSpace: React.FC<{ user_info: any }> = ({ user_info }) => {
     };
 
   loadPosts();
-  });
+  }, [user_info]);
 
   return (
     <div>
