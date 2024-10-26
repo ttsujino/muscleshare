@@ -41,7 +41,7 @@ export const MyUserProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     };
 
     useEffect(() => {
-        if (user && !isLoading && !error) {
+        if (user) {
             fetchUserInfo();
         }
     }, [user]);

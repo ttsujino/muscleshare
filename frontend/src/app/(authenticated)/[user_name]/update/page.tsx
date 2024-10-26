@@ -24,7 +24,7 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
       if (user) {
         setUserId(user.nickname);
         setBio(user?.user_metadata?.bio ?? '');
-        setIconPath(user.user_metadata.picture + cacheBuster ?? user.picture);
+        setIconPath(user?.user_metadata?.picture + cacheBuster ?? user.picture + cacheBuster);
       }
     }
     fetchUser();
