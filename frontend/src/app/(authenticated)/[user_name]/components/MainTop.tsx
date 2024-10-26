@@ -32,8 +32,27 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
                 <div className={styles.user_name}>
                     <p>{user_info.nickname}</p>
                 </div>
-                <div>
-                    <a href={`/${user_info.nickname}/update`}>
+                {isLoggedInUser ? (
+                    <div>
+                        <a href={`/${user_info.nickname}/update`}>
+                            <Image
+                                src={
+                                    user_info.user_metadata.picture
+                                        ? user_info.user_metadata.picture + cacheBuster
+                                        : user_info.picture
+                                            ? user_info.picture + cacheBuster
+                                            : '/default_icon.png'
+                                }
+                                alt="main"
+                                width={150}
+                                height={150}
+                                className={styles.user_icon}
+                                priority
+                            />
+                        </a>
+                    </div>
+                ) : (
+                    <div>
                         <Image
                             src={
                                 user_info.user_metadata.picture
@@ -48,8 +67,8 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
                             className={styles.user_icon}
                             priority
                         />
-                    </a>
-                </div>
+                    </div>
+                )}
             </div>
             <div className={styles.introduction}>
                 <p>{user_info.user_metadata.bio ?? ""}</p>
