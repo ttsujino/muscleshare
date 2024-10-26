@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, ReactNode, useEffect } from
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { getUserByAttribute } from "../api/handle_user_info";
 
-interface UserInfo {
+interface loginUserInfo {
     auth_user_id: string;
     app_user_id: string;
     bio: string;
@@ -11,15 +11,15 @@ interface UserInfo {
 }
 
 const UserContext = createContext<{
-    userInfo: UserInfo;
-    setUserInfo: React.Dispatch<React.SetStateAction<UserInfo>>;
+    loginUserInfo: loginUserInfo;
+    setLoginUserInfo: React.Dispatch<React.SetStateAction<loginUserInfo>>;
 } | undefined>(undefined);
 
 export const MyUserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
 
     const { user, error, isLoading } = useUser();
 
-    const [userInfo, setUserInfo] = useState<UserInfo>({
+    const [loginUserInfo, setLoginUserInfo] = useState<loginUserInfo>({
         auth_user_id: "",
         app_user_id: "",
         bio: "",
@@ -29,7 +29,7 @@ export const MyUserProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     const fetchUserInfo = async () => {
         try {
             const data = await getUserByAttribute("nickname", user?.name);
-            setUserInfo({
+            setLoginUserInfo({
                 auth_user_id: data.user_id,
                 app_user_id: data.nickname,
                 bio: data.user_metadata.bio,
@@ -47,7 +47,7 @@ export const MyUserProvider: React.FC<{ children: ReactNode }> = ({ children }) 
     }, [user]);
 
     return (
-        <UserContext.Provider value={{ userInfo, setUserInfo }}>
+        <UserContext.Provider value={{ loginUserInfo, setLoginUserInfo }}>
             {children}
         </UserContext.Provider>
     );

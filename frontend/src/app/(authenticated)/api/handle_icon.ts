@@ -18,13 +18,9 @@ export const postIcon = async (userId: string, image: File) => {
             return null;
         }
         const imageUrl = `http://localhost:3000/${response.data.image_path}`;
-        console.log('imageUrl:', imageUrl);
-        // 1分待つ
-        // await new Promise((resolve) => setTimeout(resolve, 60000));
         return imageUrl;
     } catch (error) {
         console.error('Error posting icon:', error);
-        // await new Promise((resolve) => setTimeout(resolve, 60000));
         return null;
     }
 }

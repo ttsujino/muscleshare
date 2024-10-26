@@ -1,16 +1,16 @@
 'use client';
-import * as React from 'react';
 import { loadCSS } from 'fg-loadcss';
 import styles from './MainTop.module.css';
 import Image from 'next/image';
 import Icon from '@mui/material/Icon';
-import { useUserContext } from '../../context/UserContext';
+import { isLoginUser } from './IsLoginComponent';
+import { useEffect } from 'react';
 
-const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
-    const { userInfo: contextUserInfo } = useUserContext();
-    console.log(contextUserInfo);
+const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
 
-    React.useEffect(() => {
+    const isLoggedInUser = isLoginUser(user_info.user_id);
+
+    useEffect(() => {
         const node = loadCSS(
           'https://use.fontawesome.com/releases/v5.14.0/css/all.css',
           // Inject before JSS
@@ -30,15 +30,17 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
         <div className={styles.top_container}>
             <div>
                 <div className={styles.user_name}>
-                    <p>{user_name}</p>
+                    <p>{user_info.nickname}</p>
                 </div>
                 <div>
-                    <a href={`/${user_name}/update`}>
+                    <a href={`/${user_info.nickname}/update`}>
                         <Image
                             src={
-                                contextUserInfo?.icon 
-                                ? contextUserInfo.icon + cacheBuster 
-                                : '/default_icon.png'
+                                user_info.user_metadata.picture
+                                    ? user_info.user_metadata.picture + cacheBuster
+                                    : user_info.picture
+                                        ? user_info.picture + cacheBuster
+                                        : '/default_icon.png'
                             }
                             alt="main"
                             width={150}
@@ -50,13 +52,15 @@ const MainTop: React.FC<{ user_name?: any }> = ({ user_name }) => {
                 </div>
             </div>
             <div className={styles.introduction}>
-                <p>{contextUserInfo.bio ?? ""}</p>
+                <p>{user_info.user_metadata.bio ?? ""}</p>
             </div>
-            <div>
-                <a href="/post">
-                    <Icon baseClassName="fas" className={`${"fa-plus-circle"} ${styles.create_icon}`} />
-                </a>
-            </div>
+            {isLoggedInUser && (
+                <div>
+                    <a href="/post">
+                        <Icon baseClassName="fas" className={`${"fa-plus-circle"} ${styles.create_icon}`} />
+                    </a>
+                </div>
+            )}
         </div>
     );
 };
