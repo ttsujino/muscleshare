@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { cache, useState } from "react";
 import styles from "./update.module.css";
 import Image from 'next/image';
 import { getUserByAttribute, updateUser } from "../../api/handle_user_info";
@@ -18,12 +18,13 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
   // 現在のユーザー情報を取得
   useEffect(() => {
     const fetchUser = async () => {
+      const cacheBuster = `?v=${new Date().getTime()}`;
       const user = await getUserByAttribute("nickname", userId);
       setAuthUserId(user.user_id);
       if (user) {
         setUserId(user.nickname);
         setBio(user?.user_metadata?.bio ?? '');
-        setIconPath(user.user_metadata.picture ?? user.picture);
+        setIconPath(user.user_metadata.picture + cacheBuster ?? user.picture);
       }
     }
     fetchUser();

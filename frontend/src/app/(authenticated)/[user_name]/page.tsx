@@ -16,7 +16,7 @@ export default async function Home({ params }: { params: { user_name: string } }
       <div className={`${styles.container}`}>
         <div style={{ minWidth: '1000px', margin: '0 auto' }}>
           <MainTop user_info={userInfo || ''} />
-          <PostSpace />
+          <PostSpace user_info={userInfo || ''} />
         </div>
       </div>
     </main>
