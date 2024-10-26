@@ -19,7 +19,7 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
   useEffect(() => {
     const fetchUser = async () => {
       const cacheBuster = `?v=${new Date().getTime()}`;
-      const user = await getUserByAttribute("nickname", userId);
+      const user = await getUserByAttribute("nickname", params.user_name);
       setAuthUserId(user.user_id);
       if (user) {
         setUserId(user.nickname);
