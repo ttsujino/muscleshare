@@ -7,7 +7,6 @@ import { useRouter } from 'next/navigation';
 import { Post } from '../../api/handle_post';
 import Image from 'next/image';
 import Loading from './Loading';
-import { useUser } from "@auth0/nextjs-auth0/client";
 
 const DisplayPost: React.FC<{ id: string; user_id: string; content: string, image?: string }> = ({ id, user_id, content, image }) => {
   const router = useRouter();
@@ -40,28 +39,24 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
   );
 };
 
-const PostSpace = () => {
+const PostSpace: React.FC<{ user_info: any }> = ({ user_info }) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // ローディング状態を追加
-  const backendApiUrl = process.env.BACKEND_API_URL;
-  const { user, isLoading, error } = useUser();
 
   useEffect(() => {
     const loadPosts = async () => {
-      if (!user?.sub) {
+      if (!user_info?.user_id) {
         setLoading(false);
         return;
       }
 
-      const updatedPosts = await fetchUserPosts(user.sub);
+      const updatedPosts = await fetchUserPosts(user_info.user_id);
       setPosts(updatedPosts);
       setLoading(false);
     };
 
-    if (!isLoading) {
-      loadPosts();
-    }
-  }, [user, isLoading, backendApiUrl]);
+  loadPosts();
+  });
 
   return (
     <div>

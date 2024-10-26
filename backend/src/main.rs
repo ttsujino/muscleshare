@@ -21,7 +21,9 @@ use handlers::{
     get_user_posts,
     get_post,
     delete_post,
-    get_image
+    get_image,
+    post_icon,
+    get_icon,
 };
 
 #[tokio::main]
@@ -62,6 +64,8 @@ fn create_app<T: PostRepository>(repository: T, cors: CorsLayer) -> Router {
         .route("/posts", get(get_all_posts::<T>))
         .route("/post/:uuid", delete(delete_post::<T>))
         .route("/image/:uuid", get(get_image))
+        .route("/icon/:uuid", post(post_icon))
+        .route("/icon/:uuid", get(get_icon))
         .layer(Extension(Arc::new(repository)))
         .layer(cors)
 }

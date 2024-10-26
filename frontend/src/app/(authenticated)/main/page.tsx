@@ -3,13 +3,13 @@ import { useUser } from "@auth0/nextjs-auth0/client";
 import { useEffect } from "react";
 
 export default function MainPage() {
-  const { user, isLoading } = useUser();
+  const { user } = useUser();
 
   useEffect(() => {
-    if (!isLoading && user) {
+    if (user) {
       window.location.assign(`/${user.nickname}`);
     }
-  }, [isLoading, user]);
+  }, [user]);
 
   return (
     <div>

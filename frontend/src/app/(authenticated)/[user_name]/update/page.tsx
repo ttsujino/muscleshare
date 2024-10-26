@@ -1,14 +1,16 @@
 'use client';
-import { useState } from "react";
+import { cache, useState } from "react";
 import styles from "./update.module.css";
 import Image from 'next/image';
 import { getUserByAttribute, updateUser } from "../../api/handle_user_info";
 import { useEffect } from "react";
+import { postIcon } from "../../api/handle_icon";
 
 // サーバーサイドとクライアントサイドの処理を分けたい
 
 export default function UpdatePage({ params }: { params: { user_name: string } }) {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [iconPath, setIconPath] = useState<string>('');
+  const [icon, setIcon] = useState<File | null>(null);
   const [userId, setUserId] = useState<string>(params.user_name);
   const [bio, setBio] = useState<string>('');
   const [authUserId, setAuthUserId] = useState<string>('');
@@ -16,12 +18,13 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
   // 現在のユーザー情報を取得
   useEffect(() => {
     const fetchUser = async () => {
-      const user = await getUserByAttribute("nickname", userId);
+      const cacheBuster = `?v=${new Date().getTime()}`;
+      const user = await getUserByAttribute("nickname", params.user_name);
       setAuthUserId(user.user_id);
       if (user) {
         setUserId(user.nickname);
-        setBio(user?.user_metadata?.bio ?? '');
-        setSelectedImage(user.picture);
+        setBio(user.user_metadata?.bio ?? '');
+        setIconPath((user.user_metadata?.picture ?? user.picture) + cacheBuster);
       }
     }
     fetchUser();
@@ -29,9 +32,10 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
+      setIcon(e.target.files[0]);
       const reader = new FileReader();
       reader.onload = (e) => {
-        setSelectedImage(e.target?.result as string);
+        setIconPath(e.target?.result as string);
       };
       reader.readAsDataURL(e.target.files[0]);
     }
@@ -39,10 +43,20 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    let imagePath = null;
+
+    if (icon) {
+      imagePath = await postIcon(authUserId, icon);
+    } else {
+      imagePath = iconPath;
+    }
+
     const updateUserInfo = {
       nickname: userId,
-      // icon: selectedImage || '/default_icon.png',
-      user_metadata: { bio: bio },
+      user_metadata: {
+        bio: bio,
+        picture: imagePath,
+      },
     };
     const result = await updateUser(authUserId, updateUserInfo);
     if (result) {
@@ -91,7 +105,7 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
         />
         <div style={{ marginTop: '20px' }}>
           <Image
-            src={selectedImage || '/default_icon.png'}
+            src={iconPath || '/default_icon.png'}
             alt="Selected"
             width={200}
             height={200}
