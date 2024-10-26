@@ -9,7 +9,7 @@ export default function MainPage() {
     if (!isLoading && user) {
       window.location.assign(`/${user.nickname}`);
     }
-  }, [isLoading, user]);
+  }, [user]);
 
   return (
     <div>
