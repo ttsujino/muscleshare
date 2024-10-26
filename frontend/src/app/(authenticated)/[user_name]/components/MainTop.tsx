@@ -5,10 +5,12 @@ import Image from 'next/image';
 import Icon from '@mui/material/Icon';
 import { isLoginUser } from './IsLoginComponent';
 import { useEffect } from 'react';
+import { useUserContext } from '../../context/UserContext';
 
 const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
 
-    const isLoggedInUser = isLoginUser(user_info.user_id);
+    const { loginUserInfo } = useUserContext();
+    const isLoggedInUser = isLoginUser(user_info.user_id, loginUserInfo.auth_user_id);
 
     useEffect(() => {
         const node = loadCSS(
