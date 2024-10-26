@@ -23,8 +23,8 @@ export default function UpdatePage({ params }: { params: { user_name: string } }
       setAuthUserId(user.user_id);
       if (user) {
         setUserId(user.nickname);
-        setBio(user?.user_metadata?.bio ?? '');
-        setIconPath(user?.user_metadata?.picture + cacheBuster ?? user.picture + cacheBuster);
+        setBio(user.user_metadata?.bio ?? '');
+        setIconPath((user.user_metadata?.picture ?? user.picture) + cacheBuster);
       }
     }
     fetchUser();
