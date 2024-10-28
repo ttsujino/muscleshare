@@ -1,11 +1,12 @@
 import axios from 'axios';
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
 
 export const postIcon = async (userId: string, image: File) => {
     const formData = new FormData();
     formData.append("image", image);
 
-    let request_url = `http://localhost:3000/icon/${userId}`
+    let request_url = `${BACKEND_URL}/icon/${userId}`
     try {
         const response = await axios.post(request_url, formData, {
             headers: {
@@ -17,7 +18,7 @@ export const postIcon = async (userId: string, image: File) => {
             console.error(`Unexpected status code: ${response.status}`);
             return null;
         }
-        const imageUrl = `http://localhost:3000/${response.data.image_path}`;
+        const imageUrl = `${BACKEND_URL}/${response.data.image_path}`;
         return imageUrl;
     } catch (error) {
         console.error('Error posting icon:', error);
@@ -26,7 +27,7 @@ export const postIcon = async (userId: string, image: File) => {
 }
 
 export const getIcon = async (userId: string): Promise<string | null> => {
-    let request_url = `http://localhost:3000/icon/${userId}`
+    let request_url = `${BACKEND_URL}/icon/${userId}`
     try {
         const response = await axios.get(request_url, {
             headers: {

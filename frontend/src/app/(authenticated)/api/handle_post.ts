@@ -8,6 +8,8 @@ export interface Post {
     image?: string;
 }
 
+const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_API_URL;
+
 export const createPost = async (content: string, image: File, user_id: string | null | undefined) => {
     const formData = new FormData();
     formData.append("content", content);
@@ -15,7 +17,7 @@ export const createPost = async (content: string, image: File, user_id: string |
       formData.append("image", image);
     }
 
-    const response = await fetch(`http://localhost:3000/post/new/${user_id}`, {
+    const response = await fetch(`${BACKEND_URL}/post/new/${user_id}`, {
       method: "POST",
       headers: {
         'Accept': 'application/json',
@@ -28,11 +30,11 @@ export const createPost = async (content: string, image: File, user_id: string |
 
 export const fetchUserPosts = async (user_id: string): Promise<Post[] | null> => {
     try {
-        const response = await axios.get(`http://localhost:3000/posts/${user_id}`);
+        const response = await axios.get(`${BACKEND_URL}/posts/${user_id}`);
         const data: Post[] = await response.data;
         const updatedPosts = data.map((post) => ({
             ...post,
-            image: `http://localhost:3000/image/${post.id}`
+            image: `${BACKEND_URL}/image/${post.id}`
         }));
 
         return updatedPosts;
@@ -45,11 +47,11 @@ export const fetchUserPosts = async (user_id: string): Promise<Post[] | null> =>
 // 現時点では未使用
 // export const fetchAllPosts = async (): Promise<Post[] | null> => {
 //     try {
-//         const response = await axios.get("http://localhost:3000/posts");
+//         const response = await axios.get("${BACKEND_URL}/posts");
 //         const data: Post[] = await response.data;
 //         const updatedPosts = data.map((post) => ({
 //             ...post,
-//             image: `http://localhost:3000/image/${post.id}`
+//             image: `${BACKEND_URL}/image/${post.id}`
 //         }));
 //         console.log('updatedPosts:', updatedPosts);
 
@@ -62,11 +64,11 @@ export const fetchUserPosts = async (user_id: string): Promise<Post[] | null> =>
 
 export const fetchPost = async (image_id: string): Promise<Post | null> => {
     try {
-        const response = await axios.get(`http://localhost:3000/post/${image_id}`);
+        const response = await axios.get(`${BACKEND_URL}/post/${image_id}`);
         const data: Post = await response.data;
         const updatedPost = {
             ...data,
-            image: `http://localhost:3000/image/${data.id}`
+            image: `${BACKEND_URL}/image/${data.id}`
         };
         return updatedPost;
     } catch (error) {
@@ -77,7 +79,7 @@ export const fetchPost = async (image_id: string): Promise<Post | null> => {
 
 export const deletePost = async (image_id: string) => {
     try {
-        await axios.delete(`http://localhost:3000/post/${image_id}`);
+        await axios.delete(`${BACKEND_URL}/post/${image_id}`);
         alert('削除しました');
     } catch (error) {
         console.error('削除エラー:', error);
