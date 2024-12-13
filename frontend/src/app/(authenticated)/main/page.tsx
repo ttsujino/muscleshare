@@ -1,15 +1,15 @@
 'use client';
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useUserContext } from "../context/UserContext";
 import { useEffect } from "react";
 
 export default function MainPage() {
-  const { user } = useUser();
+  const { loginUserInfo } = useUserContext();
 
   useEffect(() => {
-    if (user) {
-      window.location.assign(`/${user.nickname}`);
+    if (loginUserInfo.app_user_id) {
+      window.location.assign(`/${loginUserInfo.app_user_id}`);
     }
-  }, [user]);
+  }, [loginUserInfo]);
 
   return (
     <div>
