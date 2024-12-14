@@ -60,7 +60,7 @@ const PostSpace: React.FC<{ user_info: any }> = ({ user_info }) => {
             <Loading />
           </div>
         ) : (
-          <Grid container spacing={2} justifyContent="center">
+          <Grid container spacing={2} justifyContent="flex-start">
             {posts ? posts.map((post) => (
               <Grid size={4} key={post.id}>
                 <DisplayPost {...post} />
