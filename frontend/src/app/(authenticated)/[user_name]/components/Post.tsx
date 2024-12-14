@@ -7,8 +7,9 @@ import { useRouter } from 'next/navigation';
 import { Post } from '../../api/handle_post';
 import Image from 'next/image';
 import Loading from './Loading';
+import { useUserContext } from '../../context/UserContext';
 
-const DisplayPost: React.FC<{ id: string; user_id: string; content: string, image?: string }> = ({ id, user_id, content, image }) => {
+const DisplayPost: React.FC<{ id: string; user_id: string; content: string, image?: string, isLogin: boolean }> = ({ id, user_id, content, image, isLogin }) => {
   const router = useRouter();
 
   const handleImageClick = () => {
@@ -22,8 +23,13 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
         alt={user_id}
         width={500}
         height={300}
-        style={{ width: '100%', height: 'auto', borderRadius: 8, cursor: 'pointer' }}
-        onClick={handleImageClick}
+        style={{
+          width: '280px',
+          height: '280px',
+          borderRadius: 8,
+          cursor: isLogin ? 'pointer' : 'default'
+        }}
+        onClick={isLogin ? handleImageClick : undefined}
         priority
       />
       <Typography variant="body2" style={{ paddingTop: '10px' }}>
@@ -36,6 +42,7 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
 const PostSpace: React.FC<{ user_info: any }> = ({ user_info }) => {
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [loading, setLoading] = useState<boolean>(true); // ローディング状態を追加
+  const { loginUserInfo } = useUserContext();
 
   useEffect(() => {
     const loadPosts = async () => {
@@ -60,10 +67,10 @@ const PostSpace: React.FC<{ user_info: any }> = ({ user_info }) => {
             <Loading />
           </div>
         ) : (
-          <Grid container spacing={2} justifyContent="center">
+          <Grid container spacing={2} justifyContent="flex-start">
             {posts ? posts.map((post) => (
               <Grid size={4} key={post.id}>
-                <DisplayPost {...post} />
+                <DisplayPost {...post} isLogin={loginUserInfo?.auth_user_id === user_info.user_id} />
               </Grid>
             )) : null}
           </Grid>

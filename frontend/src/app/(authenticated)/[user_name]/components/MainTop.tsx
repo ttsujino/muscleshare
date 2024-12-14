@@ -73,7 +73,9 @@ const MainTop: React.FC<{ user_info?: any }> = ({ user_info }) => {
                 )}
             </div>
             <div className={styles.introduction}>
-                <p>{user_info.user_metadata.bio ?? ""}</p>
+                <p style={{ whiteSpace: "pre-line" }}>
+                    {user_info.user_metadata.bio ?? ""}
+                </p>
             </div>
             {isLoggedInUser && (
                 <div>

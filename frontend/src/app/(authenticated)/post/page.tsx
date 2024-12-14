@@ -61,7 +61,7 @@ export default function PostPage() {
           className={styles.input}
         />
       </label>
-      {preview && <Image src={preview} alt="プレビュー" className={styles.preview} />}
+      {preview && <Image src={preview} alt="プレビュー" className={styles.preview} width={300} height={300} />}
     </div>
     <button type="submit" className={styles.button}>投稿する</button>
   </form>
