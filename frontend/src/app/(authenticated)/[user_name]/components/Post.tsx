@@ -16,10 +16,7 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
   };
 
   return (
-    <Paper elevation={3} style={{ padding: 16 }}>
-      <Typography variant="h6" gutterBottom>
-        {user_id}
-      </Typography>
+    <Paper elevation={5} style={{ padding: 16 }}>
       <Image
         src={image || '/default.jpg'}
         alt={user_id}
@@ -29,10 +26,7 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
         onClick={handleImageClick}
         priority
       />
-      <Typography variant="h6" gutterBottom>
-        {id}
-      </Typography>
-      <Typography variant="body2">
+      <Typography variant="body2" style={{ 'padding-top': '10px' }}>
         {content}
       </Typography>
     </Paper>
