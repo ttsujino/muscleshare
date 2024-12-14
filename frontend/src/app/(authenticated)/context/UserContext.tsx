@@ -28,7 +28,7 @@ export const MyUserProvider: React.FC<{ children: ReactNode }> = ({ children }) 
 
     const fetchUserInfo = async () => {
         try {
-            const data = await getUserByAttribute("nickname", user?.name);
+            const data = await getUserByAttribute("name", user?.name);
             setLoginUserInfo({
                 auth_user_id: data.user_id,
                 app_user_id: data.nickname,
