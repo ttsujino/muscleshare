@@ -26,7 +26,7 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
         onClick={handleImageClick}
         priority
       />
-      <Typography variant="body2" style={{ 'padding-top': '10px' }}>
+      <Typography variant="body2" style={{ paddingTop: '10px' }}>
         {content}
       </Typography>
     </Paper>
