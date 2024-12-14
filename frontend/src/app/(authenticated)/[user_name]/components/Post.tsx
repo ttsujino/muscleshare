@@ -24,8 +24,8 @@ const DisplayPost: React.FC<{ id: string; user_id: string; content: string, imag
         width={500}
         height={300}
         style={{
-          width: '100%',
-          height: 'auto',
+          width: '280px',
+          height: '280px',
           borderRadius: 8,
           cursor: isLogin ? 'pointer' : 'default'
         }}
