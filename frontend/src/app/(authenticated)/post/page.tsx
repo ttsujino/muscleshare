@@ -1,63 +1,71 @@
- // Start of Selection
 "use client";
+import styles from "./page.module.css";
 import { useState } from "react";
 import { createPost } from "../api/handle_post";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import Image from "next/image";
 
 export default function PostPage() {
-  const { user, error, isLoading } = useUser();
+  const { user } = useUser();
   const [content, setContent] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  
+  const [preview, setPreview] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!image) {
       alert("画像を選択してください");
       return;
     }
-    let user_id = user?.sub;
+    const user_id = user?.sub;
     const response = await createPost(content, image, user_id);
 
     if (response.ok) {
-      // 投稿成功時の処理
-      alert('投稿完了');
-      window.location.href = '/main';
+      alert("投稿完了");
+      window.location.href = "/main";
     } else {
-      // 投稿失敗時の処理
       alert("投稿に失敗しました");
     }
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const file = e.target.files[0];
+      setImage(file);
+      setPreview(URL.createObjectURL(file));
+    }
+  };
+
   return (
-    <div>
-      <h1>投稿フォーム</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>
-            内容:
-            <textarea
-              value={content}
-              onChange={(e) => setContent(e.target.value)}
-              required
-            />
-          </label>
-        </div>
-        <div>
-          <label>
-            画像:
-            <input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                if (e.target.files) {
-                  setImage(e.target.files[0]);
-                }
-              }}
-            />
-          </label>
-        </div>
-        <button type="submit">投稿する</button>
-      </form>
+<div className={styles.container}>
+  <h1 className={styles.title}>投稿フォーム</h1>
+  <form onSubmit={handleSubmit} className={styles.form}>
+    <div className={styles.formGroup}>
+      <label className={styles.label}>
+        内容:
+        <textarea
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          required
+          className={styles.textarea}
+        />
+      </label>
     </div>
+    <div className={styles.formGroup}>
+      <label className={styles.label}>
+        画像:
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className={styles.input}
+        />
+      </label>
+      {preview && <Image src={preview} alt="プレビュー" className={styles.preview} />}
+    </div>
+    <button type="submit" className={styles.button}>投稿する</button>
+  </form>
+</div>
+
   );
 }
